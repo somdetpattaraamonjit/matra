@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="light" data-num="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>มาตรา MATRA — มาตรฐานข้อมูลกฎหมายไทยระดับมาตรา</title>
+<meta name="description" content="อ่านกฎหมายไทย 1,600+ ฉบับ ฉบับรวมการแก้ไขล่าสุด ค้นหาตามหมวดเรื่อง ครบทุกมาตรา พร้อมลิงก์ตรวจกับเอกสารต้นทางราชการได้ทุกมาตรา">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&family=Noto+Serif+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== 1. Tokens (dark = reading app, light = printed code book) ===== */
+:root{
+  --bg:#0c1017; --paper:#131926; --s2:#1a2233; --s3:#212b40; --bd:#2a3650;
+  --tx1:#eef2fa; --tx2:#9aa8c4; --tx3:#5f6d8c;
+  --acc:#d8b060; --acc2:#f0d090; --ok:#3ecf8e; --warn:#f0a044; --info:#5aa2f0;
+  --r:12px; --serif:'Noto Serif Thai',serif; --sans:'Noto Sans Thai',sans-serif;
+  --body-font:var(--sans); --matra-card-bg:var(--s2); --matra-card-bd:var(--bd);
+}
+html[data-theme="light"]{
+  --bg:#f6f3ec; --paper:#fffdf8; --s2:#faf7f0; --s3:#f0ece2; --bd:#ddd6c8;
+  --tx1:#191713; --tx2:#5a5344; --tx3:#8a8272;
+  --acc:#8a6d1f; --acc2:#6b540f; --ok:#1a7a4f; --warn:#9a6510; --info:#1a5fa8;
+  --body-font:var(--serif); --matra-card-bg:transparent; --matra-card-bd:transparent;
+}
+/* ===== 2. Base ===== */
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx1);font-family:var(--sans);font-size:15.5px;line-height:1.85}
+a{color:var(--info);text-decoration:none} a:hover{text-decoration:underline}
+button{font-family:var(--sans);cursor:pointer;border:none;background:none;color:inherit}
+::-webkit-scrollbar{width:9px;height:9px} ::-webkit-scrollbar-thumb{background:var(--bd);border-radius:9px}
+/* ===== 3. Topbar ===== */
+.topbar{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--bd)}
+.topbar-in{max-width:1400px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--tx1)}
+.brand span{color:var(--acc);font-size:.72rem;font-weight:600;margin-left:8px;letter-spacing:.5px}
+.lawpick-wrap{position:relative}
+.lawpick{background:var(--s2);border:1px solid var(--bd);color:var(--tx1);font-family:var(--sans);font-size:.85rem;font-weight:600;border-radius:9px;padding:7px 12px;width:340px;max-width:44vw;outline:none}
+.lawpick:focus{border-color:var(--acc)}
+.pickmenu{position:absolute;top:calc(100% + 6px);left:0;width:min(600px,92vw);max-height:min(560px,68vh);overflow-y:auto;background:var(--paper);border:1px solid var(--bd);border-radius:12px;box-shadow:0 14px 44px rgba(0,0,0,.28);z-index:200;display:none}
+.pickmenu.open{display:block}
+.pm-count{position:sticky;top:0;background:var(--paper);padding:9px 13px;font-size:.74rem;color:var(--tx2);border-bottom:1px solid var(--bd);font-weight:600;z-index:2}
+.pm-group{font-size:.67rem;font-weight:700;color:var(--acc);padding:9px 13px 3px;letter-spacing:.3px;background:var(--paper)}
+.pm-item{display:flex;gap:9px;align-items:baseline;padding:7px 13px;cursor:pointer;font-size:.84rem;color:var(--tx1);line-height:1.5}
+.pm-item:hover,.pm-item.sel{background:var(--s3)}
+.pm-badge{font-size:.6rem;font-weight:700;color:var(--tx3);border:1px solid var(--bd);border-radius:10px;padding:1px 7px;flex:none;white-space:nowrap}
+.pm-title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pm-empty{padding:18px 13px;color:var(--tx3);font-size:.82rem;text-align:center}
+.hidden{display:none!important}
+.home-btn{background:var(--s2);border:1px solid var(--bd);color:var(--tx2);border-radius:9px;padding:7px 11px;font-size:.8rem;font-weight:600}
+.home-btn:hover{color:var(--acc2);border-color:var(--acc)}
+.home{max-width:1080px;margin:0 auto;padding:30px 20px 70px}
+.hero{text-align:center;padding:26px 0 20px}
+.hero-brand{font-family:var(--serif);font-size:2.3rem;font-weight:700;color:var(--tx1)}
+.hero-brand span{color:var(--acc);font-size:.95rem;letter-spacing:2px;margin-left:8px}
+.hero-tag{color:var(--tx2);font-size:.92rem;margin:12px auto 0;max-width:600px;line-height:1.8}
+.home-search{width:100%;background:var(--paper);border:1.5px solid var(--bd);border-radius:14px;color:var(--tx1);font-family:var(--sans);font-size:1rem;padding:14px 20px;outline:none;box-shadow:0 6px 24px rgba(0,0,0,.09)}
+.home-search:focus{border-color:var(--acc)}
+.home-sec-h{font-family:var(--serif);font-size:1.05rem;color:var(--acc2);font-weight:700;margin:30px 0 14px;text-align:center}
+.code-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.code-card{background:var(--paper);border:1px solid var(--bd);border-radius:14px;padding:16px 18px;cursor:pointer;transition:.15s;display:block;width:100%;text-align:left;font-family:inherit;color:var(--tx1)}
+.code-card:hover,.code-card:focus-visible{border-color:var(--acc);transform:translateY(-2px);box-shadow:0 8px 26px rgba(0,0,0,.12);outline:none}
+.cc-badge{font-size:.6rem;font-weight:700;color:var(--acc);border:1px solid var(--bd);border-radius:10px;padding:1px 9px;display:inline-block}
+.cc-title{font-family:var(--serif);font-size:1.04rem;font-weight:700;color:var(--tx1);margin:10px 0 4px;line-height:1.4}
+.cc-meta{font-size:.76rem;color:var(--tx3)}
+.coverage{margin:34px auto 0;background:var(--paper);border:1px solid var(--bd);border-radius:14px;padding:18px 22px}
+.coverage h3{font-size:.9rem;color:var(--acc2);font-family:var(--serif);margin-bottom:12px}
+.cov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:12px}
+.cov-cell{text-align:center;padding:6px}
+.cov-cell .n{font-size:1.35rem;font-weight:700;color:var(--tx1)}
+.cov-cell .l{font-size:.68rem;color:var(--tx3);margin-top:2px;line-height:1.5}
+.cov-note{font-size:.75rem;color:var(--tx3);line-height:1.85;border-top:1px dashed var(--bd);padding-top:10px}
+/* — browse by domain — */
+.dom-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:11px}
+.dom-card{background:var(--paper);border:1px solid var(--bd);border-radius:12px;padding:13px 16px;cursor:pointer;text-align:left;font-family:inherit;color:var(--tx1);transition:.15s;display:block;width:100%}
+.dom-card:hover,.dom-card:focus-visible{border-color:var(--acc);transform:translateY(-1px);outline:none}
+.dom-card .dc-n{font-family:var(--serif);font-weight:700;font-size:.95rem;line-height:1.45}
+.dom-card .dc-c{font-size:.72rem;color:var(--tx3);margin-top:4px}
+.dom-card.dc-un{border-style:dashed;color:var(--tx2)}
+.domhome{max-width:1080px;margin:0 auto;padding:22px 20px 70px}
+.domhome-h{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.domhome-h h1{font-family:var(--serif);font-size:1.5rem;color:var(--tx1)}
+.domhome-h small{color:var(--tx3);font-size:.8rem}
+.dom-list{margin-top:14px}
+.dl-group{font-size:.72rem;font-weight:700;color:var(--acc);letter-spacing:.3px;margin:16px 0 6px}
+.dl-item{display:flex;gap:10px;align-items:baseline;padding:8px 12px;border:1px solid var(--bd);border-radius:10px;margin-bottom:6px;background:var(--paper);cursor:pointer;font-size:.88rem;line-height:1.6;width:100%;text-align:left;font-family:inherit;color:var(--tx1)}
+.dl-item:hover,.dl-item:focus-visible{border-color:var(--acc);outline:none}
+.dl-item .m{font-size:.7rem;color:var(--tx3);flex:none;white-space:nowrap}
+.dl-item .rp{font-size:.62rem;font-weight:700;color:var(--warn);border:1px solid var(--warn);border-radius:10px;padding:0 7px;flex:none}
+/* — completeness — */
+.compl{margin-top:10px;font-size:.78rem;color:var(--tx2);font-family:var(--sans)}
+.compl .bar{height:7px;background:var(--s3);border:1px solid var(--bd);border-radius:6px;overflow:hidden;margin:6px auto 4px;max-width:420px}
+.compl .fill{height:100%;background:var(--acc);border-radius:6px}
+/* — refs chips — */
+.refs{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px;font-family:var(--sans)}
+.refs .rlabel{font-size:.68rem;color:var(--tx3)}
+.ref-chip{font-size:.7rem;font-weight:600;color:var(--info);border:1px solid var(--bd);border-radius:11px;padding:1px 9px;cursor:pointer;background:transparent;transition:.12s}
+.ref-chip:hover,.ref-chip:focus-visible{border-color:var(--info);outline:none}
+.ref-more{font-size:.68rem;color:var(--tx3);cursor:pointer;background:none;border:none;text-decoration:underline dotted}
+html[data-theme="light"] .refs{padding-left:2.6em}
+/* — print: หน้ากระดาษสะอาด — */
+@media print{
+  .topbar,.mtabs,.searchbar,.sidebar,.deka-btn,.refs,footer,.home,.domhome{display:none!important}
+  .shell{display:block;padding:0}
+  .panel{border:none}
+  body{background:#fff;color:#000}
+  .matra{break-inside:avoid}
+}
+.top-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
+.tog{display:flex;border:1px solid var(--bd);border-radius:9px;overflow:hidden}
+.tog button{padding:6px 12px;font-size:.8rem;font-weight:700;color:var(--tx3);background:var(--paper);transition:.15s}
+.tog button.on{background:var(--s3);color:var(--acc2)}
+/* ===== 4. Shell ===== */
+.shell{max-width:1400px;margin:0 auto;padding:16px 20px 60px;display:grid;grid-template-columns:250px 320px 1fr;gap:16px;align-items:start}
+.panel{background:var(--paper);border:1px solid var(--bd);border-radius:var(--r)}
+.panel-h{padding:11px 14px;border-bottom:1px solid var(--bd);font-size:.8rem;font-weight:700;color:var(--acc);letter-spacing:.3px;display:flex;justify-content:space-between}
+.panel-h small{color:var(--tx3);font-weight:500}
+.sidebar{position:sticky;top:66px;max-height:calc(100vh - 82px);display:flex;flex-direction:column}
+.sidebar .scroll{overflow-y:auto;padding:8px}
+/* — versions — */
+.ver{display:flex;gap:10px;padding:8px 10px;border-radius:9px;margin-bottom:2px;font-size:.8rem;color:var(--tx3);border:1px solid transparent}
+.ver .dot{width:9px;height:9px;border-radius:50%;background:var(--bd);margin-top:7px;flex:none}
+.ver.latest{background:var(--s2);border-color:var(--ok);color:var(--tx1)}
+.ver.latest .dot{background:var(--ok)}
+.ver.latest .tag{display:inline-block;font-size:.68rem;font-weight:700;color:var(--ok);border:1px solid var(--ok);border-radius:12px;padding:1px 8px;margin-top:3px}
+.ver .code{font-weight:600;font-family:var(--sans)}
+.ver-note{font-size:.72rem;color:var(--tx3);padding:10px 12px;border-top:1px dashed var(--bd);margin-top:6px;line-height:1.7}
+/* — TOC — */
+.toc-item{display:flex;align-items:baseline;gap:7px;padding:6px 9px;border-radius:8px;font-size:.83rem;color:var(--tx2);cursor:pointer;line-height:1.55;font-family:var(--sans)}
+.toc-item:hover{background:var(--s3);color:var(--tx1)}
+.toc-item.active{background:var(--s3);color:var(--acc2)}
+.toc-phak{font-weight:700;color:var(--tx1);margin-top:8px;font-size:.87rem}
+.toc-laksana{padding-left:16px;font-weight:600}
+.toc-muad{padding-left:32px} .toc-suan{padding-left:46px}
+.amend-mark{font-size:.62rem;font-weight:600;color:var(--tx3);border:1px solid var(--bd);border-radius:10px;padding:0 7px;flex:none;white-space:nowrap}
+/* ===== 5. Reader ===== */
+.reader-head{padding:20px 24px 14px;border-bottom:1px solid var(--bd);text-align:center}
+.reader-head h1{font-family:var(--serif);font-size:1.45rem;color:var(--tx1);line-height:1.45}
+.reader-head .sub{font-size:.8rem;color:var(--tx2);margin-top:6px;font-family:var(--sans)}
+.reader-head .sub b{color:var(--ok);font-weight:700}
+.searchbar{padding:12px 24px;border-bottom:1px solid var(--bd);position:sticky;top:56px;background:var(--paper);z-index:10}
+.searchbar input{width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:9px;color:var(--tx1);font-family:var(--sans);font-size:.9rem;padding:9px 14px;outline:none}
+.searchbar input:focus{border-color:var(--acc)}
+.reader-body{padding:14px 26px 40px;font-family:var(--body-font)}
+.count-note{color:var(--tx3);font-size:.76rem;padding:8px 2px;font-family:var(--sans)}
+/* section heads: book style = centered */
+.sec{margin:30px 0 6px;text-align:center;font-family:var(--serif);scroll-margin-top:128px}
+@media (max-width:820px){.sec{scroll-margin-top:172px}}
+.sec .t1{font-weight:700;font-size:1.12rem;color:var(--tx1)}
+.sec .rule{width:110px;border-top:1px solid var(--tx3);margin:8px auto 0}
+.sec.l2 .t1{font-size:1.04rem} .sec.l3 .t1{font-size:.98rem;font-weight:600}
+/* footnote (book-style editorial note) */
+.fnote{font-size:.78rem;color:var(--tx3);text-align:center;margin:2px 0 10px;font-family:var(--sans);line-height:1.7}
+.fnote a{color:var(--info)}
+/* matra */
+.matra{background:var(--matra-card-bg);border:1px solid var(--matra-card-bd);border-radius:var(--r);padding:14px 18px;margin:10px 0;transition:background .3s;scroll-margin-top:128px}
+@media (max-width:820px){.matra{scroll-margin-top:172px}}
+html[data-theme="light"] .matra{padding:4px 0;margin:2px 0}
+.matra.hl{border-color:var(--acc);background:var(--s3)}
+html[data-theme="light"] .matra.hl{background:#f5eed9;border-color:transparent;border-radius:6px;padding:4px 10px}
+.wak{margin:0 0 7px;white-space:normal}
+html[data-theme="light"] .wak{text-indent:2.6em;margin:0 0 2px;font-size:1.02rem;line-height:2}
+.wak:first-child b.mno{color:var(--acc2);font-weight:700;font-family:var(--serif)}
+.matra-foot{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center;font-family:var(--sans)}
+html[data-theme="light"] .matra-foot{margin:2px 0 10px;padding-left:2.6em}
+.pill{font-size:.68rem;font-weight:600;border-radius:12px;padding:1px 10px;border:1px solid var(--bd);color:var(--tx3)}
+html[data-theme="light"] .pill{border:none;padding:0 8px 0 0}
+.pill a{color:var(--info)}
+/* — deka — */
+.deka-btn{display:inline-flex;align-items:center;gap:6px;font-size:.74rem;font-weight:600;color:var(--info);border:1px solid var(--bd);border-radius:14px;padding:3px 12px;margin-top:9px;cursor:pointer;background:transparent;transition:.15s}
+.deka-btn:hover{border-color:var(--info)}
+html[data-theme="light"] .deka-btn{margin-left:2.6em;margin-top:2px;margin-bottom:8px}
+.overlay{position:fixed;inset:0;background:rgba(5,8,12,.74);z-index:1000;display:none;align-items:center;justify-content:center;padding:16px}
+.overlay.open{display:flex}
+.modal{background:var(--paper);border:1px solid var(--bd);border-radius:14px;max-width:760px;width:100%;max-height:88vh;overflow-y:auto;color:var(--tx1)}
+.modal-head{padding:14px 20px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--paper);z-index:2}
+.modal-head h2{font-family:var(--serif);font-size:1.02rem;color:var(--acc2)}
+.modal-body{padding:6px 20px 22px;font-family:var(--sans)}
+.dk-case{border:1px solid var(--bd);border-radius:11px;padding:13px 16px;margin:12px 0;background:var(--s2)}
+.dk-no{font-weight:700;color:var(--acc2);font-size:.92rem}
+.dk-sum{font-size:.86rem;color:var(--tx1);margin:7px 0;line-height:1.85}
+.dk-refs{font-size:.72rem;color:var(--tx2);border-top:1px dashed var(--bd);padding-top:7px;margin-top:8px;line-height:1.7}
+.dk-src{font-size:.68rem;color:var(--tx3);margin-top:3px}
+.dk-note{font-size:.74rem;color:var(--tx3);line-height:1.8;margin:10px 0}
+.dk-list{margin:6px 0}
+.dk-year{font-weight:700;color:var(--tx2);font-size:.8rem;margin:16px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--bd)}
+.dk-year span{font-weight:400;color:var(--tx3);font-size:.72rem}
+.dk-refs .ref-chip{margin:2px 4px 2px 0}
+.dk-sum{font-size:.8rem;color:var(--tx2);line-height:1.9;margin:7px 0 4px}
+.dk-sum.dim{opacity:.65;font-size:.74rem}
+.dk-full-btn{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;font-weight:600;color:var(--acc2);border:1px solid var(--bd);border-radius:12px;padding:3px 12px;margin:2px 0 4px;cursor:pointer;background:transparent;transition:.15s}
+.dk-full-btn:hover{border-color:var(--acc2)}
+.overlay.dkf{z-index:1100}
+.dk-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0 4px;position:sticky;top:53px;background:var(--paper);padding:6px 0;z-index:1}
+.dk-tools input{flex:1;min-width:160px;font-size:.8rem;padding:7px 12px;border:1px solid var(--bd);border-radius:9px;background:var(--s2);color:var(--tx1);outline:none}
+.dk-tools input:focus{border-color:var(--acc2)}
+.dk-tools select{font-size:.78rem;padding:7px 8px;border:1px solid var(--bd);border-radius:9px;background:var(--s2);color:var(--tx1)}
+.dk-count{font-size:.72rem;color:var(--tx3);white-space:nowrap}
+.dk-fulltext{font-family:var(--serif);font-size:.92rem;line-height:2.05;color:var(--tx1);padding:4px 0 10px}
+.dk-fulltext p{margin:0 0 .45em;text-indent:2.6em} /* ย่อหน้าเยื้องบรรทัดแรกแบบราชการ/หนังสือ (ICE 2026-07-03) */
+.dk-fulltext .dk-hl{font-weight:700;color:var(--acc2)}
+.dk-inlink{background:transparent;border:none;border-bottom:1px dashed var(--acc2);color:var(--acc2);cursor:pointer;font:inherit;padding:0;border-radius:0}
+.dk-inlink:hover{border-bottom-style:solid}
+.overlay.pk{z-index:1200}
+.pk-modal{max-width:640px}
+#dkReturn{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:950;display:flex;gap:6px;align-items:center;background:var(--paper);border:1px solid var(--acc2);border-radius:22px;padding:7px 10px 7px 16px;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+#dkReturn button{background:transparent;border:none;color:var(--acc2);font-weight:600;font-size:.82rem;cursor:pointer}
+#dkReturn .x{color:var(--tx3);font-weight:400}
+/* mobile tabs */
+.mtabs{display:none;position:sticky;top:56px;z-index:40;background:var(--bg);border-bottom:1px solid var(--bd);padding:0 8px}
+.mtabs button{flex:1;padding:11px 4px;font-size:.82rem;font-weight:600;color:var(--tx3);border-bottom:2px solid transparent}
+.mtabs button.on{color:var(--acc2);border-bottom-color:var(--acc)}
+footer{border-top:1px solid var(--bd);padding:22px 20px 34px;text-align:center;font-size:.75rem;color:var(--tx3);line-height:2;font-family:var(--sans)}
+.loading{padding:80px 20px;text-align:center;color:var(--tx3);font-family:var(--sans)}
+/* ===== 6. Responsive ===== */
+@media (max-width:1160px){ .shell{grid-template-columns:290px 1fr} #verPanel{display:none} }
+@media (max-width:820px){
+  .shell{display:block;padding:0 10px 50px}
+  .mtabs{display:flex}
+  .sidebar{position:static;max-height:none;margin-top:12px;display:none}
+  #verPanel.show-m,#tocPanel.show-m{display:flex}
+  .searchbar{top:99px}
+  .reader-head h1{font-size:1.15rem}
+  .reader-body{padding:12px 14px 30px}
+  .lawpick{max-width:170px}
+}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar-in">
+  <div class="brand">มาตรา<span>MATRA</span></div>
+  <button id="homeBtn" class="home-btn hidden" onclick="goHome()" title="หน้าแรก">🏠 หน้าแรก</button>
+  <div class="lawpick-wrap hidden" id="lawpickWrap">
+    <input class="lawpick" id="lawPick" placeholder="ค้นหากฎหมาย · เลขมาตรา…" autocomplete="off" oninput="onPickInput(this)" onfocus="openPick(this)" onkeydown="pickKey(event,this)">
+    <div class="pickmenu" id="pickMenu"></div>
+  </div>
+  <div class="top-actions">
+    <div class="tog" title="สลับเลขไทย / อารบิก">
+      <button id="numTh" class="on" onclick="setNum('th')">๑๒๓</button>
+      <button id="numAr" onclick="setNum('ar')">123</button>
+    </div>
+    <div class="tog" title="สลับโหมดอ่าน">
+      <button id="thL" class="on" onclick="setTheme('light')">☀️ หนังสือ</button>
+      <button id="thD" onclick="setTheme('dark')">🌙 กลางคืน</button>
+    </div>
+  </div>
+</div></header>
+
+<nav class="mtabs" id="mtabs">
+  <button data-t="ver" onclick="mtab('ver')">ฉบับ</button>
+  <button data-t="toc" onclick="mtab('toc')">สารบัญ</button>
+  <button data-t="read" class="on" onclick="mtab('read')">ตัวบท</button>
+</nav>
+
+<section id="home" class="home">
+  <div class="hero">
+    <div class="hero-brand">มาตรา <span>MATRA</span></div>
+    <div class="hero-tag">มาตรฐานข้อมูลกฎหมายไทยระดับมาตรา — เปิด ตรวจสอบได้ เชื่อมโยงถึงเอกสารต้นทางราชการทุกมาตรา</div>
+    <div class="lawpick-wrap" style="width:min(680px,94%);margin:26px auto 0">
+      <input class="home-search" id="homeSearch" placeholder="ค้นหากฎหมาย · เลขมาตรา · คำในตัวบท…" autocomplete="off" oninput="onPickInput(this)" onfocus="openPick(this)" onkeydown="pickKey(event,this)">
+      <div class="pickmenu" id="homeMenu"></div>
+    </div>
+  </div>
+  <div class="home-sec-h">ประมวลกฎหมายหลัก</div>
+  <div class="code-cards" id="codeCards"></div>
+  <div class="home-sec-h">เลือกดูตามหมวดเรื่อง</div>
+  <div class="dom-grid" id="domGrid" role="navigation" aria-label="หมวดเรื่องกฎหมาย"></div>
+  <div class="coverage" id="coverage"></div>
+</section>
+<section id="domhome" class="domhome hidden" aria-live="polite">
+  <div class="domhome-h"><h1 id="domTitle"></h1><small id="domCount"></small>
+    <button class="home-btn" onclick="goHome()" style="margin-left:auto">← ทุกหมวด</button></div>
+  <div class="dom-list" id="domList"></div>
+</section>
+<main class="shell hidden" id="shell">
+  <aside class="panel sidebar" id="verPanel">
+    <div class="panel-h">ฉบับที่เกี่ยวข้อง <small id="verCount"></small></div>
+    <div class="scroll" id="verList"></div>
+  </aside>
+  <aside class="panel sidebar" id="tocPanel">
+    <div class="panel-h">สารบัญ <small id="tocCount"></small></div>
+    <div class="scroll" id="tocList"></div>
+  </aside>
+  <section class="panel" id="readPanel">
+    <div class="reader-head"><h1 id="docTitle">กำลังโหลด…</h1><div class="sub" id="docMeta"></div></div>
+    <div class="searchbar"><input id="q" placeholder="ค้นหา: เลขมาตรา หรือคำในตัวบท เช่น 135/1, ลักทรัพย์…" oninput="onSearch()"></div>
+    <div class="reader-body" id="readerBody"><div class="loading">⏳ กำลังโหลดตัวบท…</div></div>
+  </section>
+</main>
+
+<div class="overlay" id="dkOverlay" onclick="if(event.target===this)closeDeka()">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="คำพิพากษาศาลฎีกาที่เกี่ยวข้อง">
+    <div class="modal-head"><h2 id="dkTitle"></h2><button onclick="closeDeka()" title="ปิด (Esc)">✕</button></div>
+    <div class="modal-body" id="dkBody"></div>
+  </div>
+</div>
+
+<div class="overlay dkf" id="dkfOverlay" onclick="if(event.target===this)closeDekaFull()">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="คำพิพากษาศาลฎีกาฉบับเต็ม">
+    <div class="modal-head"><h2 id="dkfTitle"></h2><button onclick="closeDekaFull()" title="ปิด (Esc)">✕</button></div>
+    <div class="modal-body" id="dkfBody"></div>
+  </div>
+</div>
+
+<div class="overlay pk" id="pkOverlay" onclick="if(event.target===this)closePeek()">
+  <div class="modal pk-modal" role="dialog" aria-modal="true" aria-label="ตัวบทมาตรา">
+    <div class="modal-head"><h2 id="pkTitle"></h2><button onclick="closePeek()" title="กลับไปที่คดี (Esc)">✕</button></div>
+    <div class="modal-body" id="pkBody"></div>
+  </div>
+</div>
+
+<div id="dkReturn" style="display:none"></div>
+
+<footer>
+  ตัวบทจากข้อมูลเปิดภาครัฐ (สำนักงานคณะกรรมการกฤษฎีกา ผ่าน Open Law Data Thailand) · ทุกมาตรามีลิงก์ตรวจกับเอกสารต้นทางราชการ<br>
+  ข้อมูลคำพิพากษาศาลฎีกา (สาธารณสมบัติ, พ.ร.บ.ลิขสิทธิ์ พ.ศ. 2537 ม.7(4)) เผยแพร่โดยศาลฎีกา — รวบรวมและทำความสะอาดโดยชุดข้อมูลเปิด <a href="https://huggingface.co/datasets/phoneee/thai-legal-corpus" target="_blank" rel="noopener">phoneee/thai-legal-corpus</a> (HuggingFace, CC-BY-4.0)<br>
+  สถานะการบังคับใช้รายมาตราจะแสดงเมื่อยืนยันหลักฐานจากราชกิจจานุเบกษาแล้วเท่านั้น · ข้อมูล CC-BY 4.0<br>
+  <b>ข้อจำกัดความรับผิด:</b> ข้อมูลบนเว็บนี้จัดทำเพื่อการศึกษาและอ้างอิงเบื้องต้น <b>ไม่ใช่คำแนะนำทางกฎหมาย</b> — โปรดตรวจสอบกับเอกสารต้นทางราชการก่อนนำไปใช้อ้างอิงจริง
+</footer>
+
+<script>
+/* ===== state ===== */
+let LAWS=[], REPORT=null, ROWS=[], CODE=[], WE=null, CUR=null, PENDING_JUMP=null;
+let NUM=localStorage.getItem('matra_num')||'th';
+let THEME=localStorage.getItem('matra_theme2')||'light'; // v2 key: รีเซ็ต default=โหมดหนังสือ (2026-07-03); ผู้ใช้เลือกใหม่แล้วจำตามปกติ
+const $=id=>document.getElementById(id);
+const AMENDED={ // ข้อเท็จจริง: โครงสร้างที่เพิ่มโดยกฎหมายแก้ไขภายหลัง (ที่มา: บันทึกการแก้ไขในชุดข้อมูล)
+ 'ลักษณะ ๑/๑ ความผิดเกี่ยวกับการก่อการร้าย':'เพิ่มโดยพระราชบัญญัติแก้ไขเพิ่มเติมประมวลกฎหมายอาญา (ฉบับที่ ๑๖) พ.ศ. ๒๕๔๖',
+ 'หมวด ๔ ความผิดเกี่ยวกับบัตรอิเล็กทรอนิกส์':'เพิ่มโดยพระราชกำหนดแก้ไขเพิ่มเติมประมวลกฎหมายอาญา พ.ศ. ๒๕๔๖',
+ 'หมวด ๕ ความผิดเกี่ยวกับหนังสือเดินทาง':'เพิ่มโดยพระราชบัญญัติแก้ไขเพิ่มเติมประมวลกฎหมายอาญา (ฉบับที่ ๑๗) พ.ศ. ๒๕๔๗',
+ 'ลักษณะ ๑๓ ความผิดเกี่ยวกับศพ':'เพิ่มโดยพระราชบัญญัติแก้ไขเพิ่มเติมประมวลกฎหมายอาญา (ฉบับที่ ๒๑) พ.ศ. ๒๕๕๑'};
+const DEFECT_H='ลักษณะ ๑ ความผิดเกี่ยวกับทรัพย์';
+const DEFECT_NOTE='หมายเหตุบรรณาธิการ: เลขลักษณะในเอกสารต้นทางพิมพ์เป็น "๑" ขณะที่สารบัญของเอกสารต้นทางฉบับเดียวกันระบุ "๑๒" — คงไว้ตามต้นฉบับ';
+
+/* ===== numeral + text utils (display-only, data untouched) ===== */
+const TH='๐๑๒๓๔๕๖๗๘๙';
+// bidirectional display-only (DISPLAY_STANDARD §1): th-mode = เลขไทยทั้งหน้า, ar-mode = อารบิกทั้งหน้า — data ไม่ถูกแตะ
+const fmt=s=> s==null?'' : (NUM==='ar' ? String(s).replace(/[๐-๙]/g,d=>TH.indexOf(d)) : String(s).replace(/[0-9]/g,d=>TH[+d]));
+const th2ar=s=>String(s).replace(/[๐-๙]/g,d=>TH.indexOf(d));
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+// display-only cleanup: strip source-scan artifacts (long underscore fill-lines,
+// repeated spaces) at RENDER TIME — stored data stays verbatim
+const disp=s=>fmt(s).replace(/_{2,}/g,'').replace(/[  ]{2,}/g,' ').trim();
+const nfm=n=>Number(n).toLocaleString('en-US'); // ตัวคั่นหลักพัน (ผ่าน fmt ต่อ = เลขไทยเมื่อโหมดไทย)
+
+/* ===== หมวดเรื่อง (TAXONOMY v1 — docs/TAXONOMY_DOMAINS.md; audit 1,619 ชื่อจริง 3 รอบ) ===== */
+const DOMAINS=['แพ่ง ครอบครัว มรดก','อาญา','วิธีพิจารณา ศาล ยุติธรรม','ภาษี การคลัง งบประมาณ',
+ 'แรงงาน สวัสดิการสังคม','ที่ดิน อสังหาริมทรัพย์ ผังเมือง','ธุรกิจ การเงิน ทรัพย์สินทางปัญญา',
+ 'ปกครอง ราชการ ท้องถิ่น','รัฐธรรมนูญ การเมือง เลือกตั้ง','สิ่งแวดล้อม ทรัพยากร เกษตร',
+ 'สาธารณสุข ยา อาหาร','คมนาคม ขนส่ง ดิจิทัล','การศึกษา ศาสนา วัฒนธรรม','ทหาร ความมั่นคง ต่างประเทศ'];
+const DOM_UN='ยังไม่จัดหมวด';
+const DOM_EXC={'ก0006-1B-0001':13,'ก0007-1B-0001':9,'ก0018-1B-0001':13,'ก0022-1B-0001':13,'ก0024-1B-0002':7,'ก0029-1B-0001':11,'ก0037-1B-0002':9,'ก0038-1B-0001':11,'ก0043-1B-0001':13,'ก0053-1B-0001':7,'ก0058-1B-0002':6,'ก0060-1B-0003':6,'ก0063-1B-0001':7,'ก0068-1C-0001':1,'ก0071-1B-0001':6,'ก0072-1B-0001':11,'ก0073-1B-0001':2,'ก0078-1B-0001':6,'ก0079-1B-0001':5,'ก0081-1B-0001':7,'ก0083-1B-0002':7,'ก0090-1B-0001':3,'ก0100-1B-0001':7,'ก0103-1B-0001':5,'ก0106-1B-0001':8,'ก0114-1B-0002':2,'ก0116-1B-0001':4,'ก0118-1B-0001':6,'ก0121-1B-0001':11,'ก0126-1B-0001':6,'ก0128-1B-0001':6,'ก0130-1B-0001':12,'ก0131-1B-0001':10,'ก0132-1B-0001':7,'ก0144-1B-0001':4,'ก0145-1B-0001':7,'ก0145-2A-0002':7,'ก0147-1B-0001':7,'ก0149-1B-0001':12,'ก0152-1B-0001':8,'ก0153-1B-0001':3,'ก0153-2A-0002':3,'ก0157-1B-0001':13,'ก0158-1B-0001':10,'ก0160-1C-0001':4,'ก0163-1B-0001':6,'ก0164-1B-0001':7,'ก0168-2A-0006':1,'ก0174-1B-0001':4,'ก0179-1B-0001':12,'ก0180-1B-0002':13,'ก0181-1B-0001':12,'ก0187-1B-0001':5,'ก0192-1C-0001':3,'ก0195-1B-0001':7,'ก0196-1B-0002':2,'ข0001-1B-0001':11,'ข0002-1B-0001':13,'ค0004-2B-0014':5,'ค0007-1B-0001':4,'ค0008-1B-0004':6,'ค0010-1B-0001':7,'ค0016-1B-0001':7,'ค0020-1B-0001':7,'ค0020-2A-0010':7,'ค0020-2A-0011':7,'ค0022-1B-0001':6,'ค0023-1C-0001':13,'ค0025-1B-0001':6,'ค0030-1B-0001':9,'ค0033-1B-0001':13,'ค0055-1B-0001':12,'ค0057-1B-0001':11,'ค0072-1B-0002':13,'ค0073-1B-0001':13,'ค0074-1B-0001':7,'ค0085-2B-0024':9,'ค0088-1B-0001':6,'ค0094-1B-0001':6,'ค0105-1B-0001':0,'ค0107-1B-0001':9,'ค0113-1B-0001':7,'ค0138-1B-0001':12,'คส023-1L-0001':11,'ง0010-1B-0001':9,'จ0004-1B-0001':2,'จ0023-1B-0001':13,'จ0032-1B-0001':11,'ช0001-1B-0001':0,'ต0001-1B-0003':3,'ต0002-1B-0001':9,'ท0010-1B-0001':6,'ท0013-1B-0001':5,'ธ0001-1B-0001':13,'ธ0013-1B-0001':6,'นท013-1B-0001':7,'บ0005-1B-0001':9,'บ0006-1B-0001':9,'บ0016-1C-0001':6,'ป0012-1B-0003':12,'ป0014-1B-0001':1,'ป0016-1B-0001':13,'ป0017-1B-0001':7,'ป0018-1B-0001':6,'ป0019-1B-0001':7,'ป0020-1B-0001':11,'ป0026-2A-0020':9,'ป0029-1B-0001':7,'ป0032-1C-0001':10,'ป0053-1B-0001':9,'ป0068-1B-0003':12,'ปว006-1I-0005':6,'ผ0001-1B-0001':6,'ผ0004-1B-0006':10,'พ0011-1B-0001':7,'พ0015-1B-0001':6,'พ0017-1B-0001':2,'พ0018-2B-0059':9,'พ0020-1B-0001':10,'ม0022-2A-0002':6,'ม0039-1B-0002':6,'ม0046-1B-0001':2,'ม0047-1B-0001':7,'ม0049-1B-0001':1,'ย0024-1B-0001':7,'ยล031-1B-0003':5,'ยล035-1B-0001':1,'ยล149-10-0002':8,'ยศ001-1B-0001':2,'ยศ002-1B-0001':2,'ยศ003-1B-0001':2,'ยศ004-1B-0001':2,'ยศ005-1B-0001':2,'ยศ006-1B-0001':2,'ร0003-1B-0001':11,'ร0015-1B-0002':9,'ร0020-1B-0001':13,'ร0040-1B-0001':9,'ร0041-1B-0001':7,'ร0058-1B-0002':6,'ล0002-1B-0001':11,'ล0003-1B-0002':7,'ล0003-2B-0008':12,'ว0034-1B-0001':7,'ว0086-1C-0003':11,'ส0088-1B-0001':9}; // manual classification pass 2026-07-03 (155 unclassified audit; ปว.เลขเปล่าคงไว้ -1 โดยเจตนา)
+const DOM_PREFIX={'ป0001':0,'ป0003':0,'ป0006':1,'ป0004':2,'ป0005':2,'พ0016':2,'ร0038':2,'จ0018':2,
+ 'ป0008':3,'ภ0010':3,'ป0002':5,'ว0085':5,'ว0048':5,'จ0015':5,'ก0056':5,'ธ0005':6,'ธ0006':6,
+ 'ร0006':7,'อ0017':7,'ต0004':7,'ว0070':7,'ก0010':7,'ม0032':12,'ม0034':12,'ม0036':12};
+const DOM_KW=[
+ [/วิธีพิจารณา|จัดตั้งศาล|เขตอำนาจศาล|เขตศาล|อนุญาโตตุลาการ|บังคับคดี|ราชทัณฑ์|อัยการ|อภัยโทษ|ไกล่เกลี่ย|ค่าตอบแทนผู้เสียหาย|กองทุนยุติธรรม|ฟื้นฟูสมรรถภาพผู้ติดยา|คุมประพฤติ|ศาลปกครอง|ศาลรัฐธรรมนูญ|ศาลยุติธรรม|ตุลาการ|ทนายความ|เนติบัณฑิต|ส่งผู้ร้ายข้ามแดน|ความร่วมมือระหว่างประเทศในเรื่องทางอาญา|นิรโทษกรรม|ล้างมลทิน|ค่าฤชาธรรมเนียม|พยานหลักฐาน|กรมสอบสวนคดีพิเศษ|นิติวิทยาศาสตร์|เปิดทำการ|แผนกคดี|วินิจฉัยชี้ขาด|ยึดทรัพย์|ปรับเป็นพินัย|กฎหมายอิสลาม/,2],
+ [/รัษฎากร|ภาษี|อากรแสตมป์|ศุลกากร|สรรพสามิต|พิกัดอัตรา|เงินคงคลัง|งบประมาณ|หนี้สาธารณะ|การคลัง|ธนบัตร|เงินตรา|เงินไปพลางก่อน|กู้เงิน|ให้ความช่วยเหลือทางการเงิน|ว่าด้วยสุรา|บัญญัติสุรา|ไพ่|กรอบวงเงิน|ให้อำนาจปฏิบัติการ|ระบบการเงิน/,3],
+ [/แรงงาน|ประกันสังคม|เงินทดแทน|คุ้มครองผู้รับงานไปทำที่บ้าน|ความปลอดภัย อาชีวอนามัย|กองทุนสำรองเลี้ยงชีพ|จัดหางาน|สวัสดิการสังคม|ผู้สูงอายุ|คนพิการ|เด็กและเยาวชน|คุ้มครองเด็ก|สตรี|ความเท่าเทียมระหว่างเพศ|กองทุนบำเหน็จบำนาญ|การออมแห่งชาติ|สงเคราะห์|ฌาปนกิจ|การทำงานของคนต่างด้าว|ผู้ประกันตน|ฝึกอาชีพ/,4],
+ [/เวนคืน|ที่ดิน|อสังหาริมทรัพย์|ผังเมือง|ควบคุมอาคาร|จัดสรรที่ดิน|อาคารชุด|ที่ราชพัสดุ|จัดรูปที่ดิน|สาธารณสมบัติ|ช่างรังวัด|การเช่าอสังหา/,5],
+ [/เงินเดือน|เงินประจำตำแหน่ง/,7],
+ [/อาญา|ป้องกันและปราบปราม|ฟอกเงิน|ค้ามนุษย์|ค้าหญิง|อุ้มหาย|ทรมาน|การพนัน|อาวุธปืน|ยุทธภัณฑ์|ว่าด้วยความผิด/,1],
+ [/ขนส่ง|ทางหลวง|จราจร|รถยนต์|เดินเรือ|เรือไทย|การบิน|อากาศยาน|เดินอากาศ|รถไฟ|ทางพิเศษ|ท่าเรือ|ไปรษณีย์|โทรคมนาคม|โทรเลข|โทรศัพท์|คอมพิวเตอร์|ธุรกรรมทางอิเล็กทรอนิกส์|คุ้มครองข้อมูลส่วนบุคคล|ไซเบอร์|ดิจิทัล|กระจายเสียง|ภาพยนตร์|พาณิชยนาวี|วิทยุ/,11],
+ [/ทหาร|กลาโหม|รับราชการทหาร|กฎอัยการศึก|ความมั่นคง|สถานการณ์ฉุกเฉิน|สงคราม|เชลยศึก|ธงชาติ|สัญชาติ|คนเข้าเมือง|หนังสือเดินทาง|ต่างประเทศ|เอกสิทธิ|ผู้ลี้ภัย|คุ้มครองการดำเนินงาน|อนุสัญญา|สหประชาชาติ|ระหว่างประเทศ|องค์กรร่วมไทย|ป้องกันประเทศ|สภาความมั่นคง|การรักษาผลประโยชน์ของชาติทางทะเล/,13],
+ [/สาธารณสุข|ยาเสพติด|วัตถุที่ออกฤทธิ์|วัตถุออกฤทธิ์|บัญญัติยา|ว่าด้วยยา|ยาสูบ|เครื่องสำอาง|อาหาร|สถานพยาบาล|โรคติดต่อ|โรคระบาด|พิษสุนัขบ้า|เชื้อโรค|หลักประกันสุขภาพ|เครื่องมือแพทย์|วิชาชีพเวชกรรม|การพยาบาล|ทันตกรรม|เภสัชกรรม|สุขภาพ|แอลกอฮอล์|บุหรี่|การสาธารณสุข|อนามัย|เทคนิคการแพทย์|กายภาพบำบัด|แพทย์แผน|สัตวแพทย์|สัตวบาล|กาชาด/,10],
+ [/ปริญญาในสาขาวิชา|ครุยวิทยฐานะ|มหาวิทยาลัย|วิทยาลัย|สถาบันอุดมศึกษา|บัณฑิตพัฒนบริหารศาสตร์|การศึกษา|ส่งเสริมการเรียนรู้|โรงเรียน|ครู|ลูกเสือ|สงฆ์|ศาสนา|มัสยิด|ฮัจย์|วัฒนธรรม|ศิลป|โบราณสถาน|พิพิธภัณฑ|หอสมุด|จดหมายเหตุ|กีฬา|มวย|วิจัย|วิทยาศาสตร์|นวัตกรรม|สถาบันเทคโนโลยี|ราชภัฏ|ราชมงคล|พลศึกษา|ดนตรี|พระปกเกล้า|พระบรมราชชนก/,12],
+ [/สิ่งแวดล้อม|ป่าไม้|ป่าสงวน|อุทยานแห่งชาติ|สงวนและคุ้มครองสัตว์ป่า|ประมง|ชลประทาน|น้ำบาดาล|ทรัพยากรน้ำ|แร่|ปิโตรเลียม|พลังงาน|ไฟฟ้า|โรงงาน|วัตถุอันตราย|เกษตร|ปฏิรูปที่ดินเพื่อเกษตรกรรม|สหกรณ์|ยาง|ข้าว|ปศุสัตว์|พันธุ์พืช|ปุ๋ย|โคนม|อ้อยและน้ำตาล|รังนก|เลื่อยโซ่ยนต์|ช้างป่า|ผักตบชวา|โรคสัตว์|สัตว์พาหะ|สัตว์พาหนะ|คุ้มครองสัตว์|สวนป่า|ป่าชุมชน|ฆ่าสัตว์|น้ำมันเชื้อเพลิง/,9],
+ [/ธนาคาร|สถาบันการเงิน|หลักทรัพย์|ประกันชีวิต|ประกันวินาศภัย|ประกันภัย|บริษัทมหาชน|ห้างหุ้นส่วน|ทะเบียนพาณิชย์|การแข่งขันทางการค้า|คุ้มครองผู้บริโภค|สิทธิบัตร|เครื่องหมายการค้า|ลิขสิทธิ์|ความลับทางการค้า|ขายตรง|โรงรับจำนำ|เช่าซื้อ|แลกเปลี่ยนเงิน|การประกอบธุรกิจ|หอการค้า|สมาคมการค้า|ล้มละลาย|หลักประกันทางธุรกิจ|สถานบริการ|โรงแรม|การท่องเที่ยว|นำเที่ยว|มัคคุเทศก์|หอพัก|ส่งเสริมการลงทุน|วิสาหกิจ|สินค้าขาออก|เขตพัฒนาพิเศษ|เครื่องจักร|วิชาชีพบัญชี|การบัญชี|มาตรฐานผลิตภัณฑ์|ชั่งตวงวัด|คลังสินค้า|ห้ามนำของ|บรรษัท|คุ้มครองเงินฝาก|สินเชื่อ|สภาอุตสาหกรรม|ผู้ส่งสินค้า|ราคาสินค้า|ซื้อขายล่วงหน้า|กักตุน|โภคภัณฑ์|วิศวกร|สถาปนิก|สถาปัตยกรรม|วิชาชีพ/,6],
+ [/รัฐธรรมนูญ|เลือกตั้ง|พรรคการเมือง|ประชามติ|รัฐสภา|สภาผู้แทน|วุฒิสภา|ผู้ตรวจการแผ่นดิน|กรรมการสิทธิมนุษยชน|ป\.ป\.ช|ตรวจเงินแผ่นดิน|ปฏิรูปประเทศ|ยุทธศาสตร์ชาติ|คณะกรรมการการเลือกตั้ง|เข้าชื่อ|ลงคะแนน|สภาพัฒนาการเมือง/,8],
+ [/ระเบียบบริหารราชการ|ราชการในพระองค์|ข้าราชการ|บำเหน็จ|บำนาญ|องค์การมหาชน|เทศบาล|องค์การบริหารส่วน|สภาตำบล|กรุงเทพมหานคร|เมืองพัทยา|เปลี่ยนแปลงเขต|ตั้งจังหวัด|ตั้งอำเภอ|เหรียญ|เครื่องราช|ราชบัณฑิต|ทะเบียนราษฎร|บัตรประจำตัว|ข้อมูลข่าวสารของราชการ|วิธีปฏิบัติราชการทางปกครอง|ความรับผิดทางละเมิดของเจ้าหน้าที่|สภาองค์กร|ยุบรวม|โอนกิจการ|โอนอำนาจ|ปรับปรุงกระทรวง|ตำรวจ|มหาดไทย|รักษาความสะอาด|ทรัพย์สินฝ่ายพระมหากษัตริย์|ทรัพย์สินพระมหากษัตริย์|ยกเลิกกฎหมาย|เครื่องแบบ|เครื่องหมายราชการ|ครุฑพ่าห์|สุสาน|ฌาปนสถาน|สุขาภิบาล|หลักเกณฑ์การ|จัดระเบียบ|สลากกินแบ่ง|ราชการแผ่นดิน|อัคคีภัย|สาธารณภัย|สถิติ|สมุหมนตรี|สภาพัฒนาการเศรษฐกิจ|สภาที่ปรึกษา|ร่วมลงทุน|จัดตั้งองค์การ|ถวายความปลอดภัย/,7],
+ [/แพ่งและพาณิชย์|ครอบครัว|มรดก|บุตรบุญธรรม|จดทะเบียนครอบครัว|ค้ำประกัน|ดอกเบี้ย|ทวงถามหนี้|ความรับผิดต่อความเสียหาย.*สินค้า|ว่าด้วยข้อสัญญาที่ไม่เป็นธรรม|ความรับผิดทางแพ่ง|ขัดกันแห่งกฎหมาย/,0]];
+function classifyLaw(l){
+  if(l.domain!=null){ const i=DOMAINS.indexOf(l.domain); if(i>=0) return i; } // override contract (Stream C ส่ง field มาเมื่อไร ใช้ทันที)
+  if(DOM_EXC[l.law_code]!=null) return DOM_EXC[l.law_code];
+  const p=(l.law_code||'').split('-')[0];
+  if(DOM_PREFIX[p]!=null) return DOM_PREFIX[p];
+  const t=(l.title||'').replace(/ํา/g,'ำ'); // normalize ำ แตก (ํ+า) จากต้นทาง — 24 ฉบับใน corpus, ทำ keyword หลุด
+  for(const [re,d] of DOM_KW){ if(re.test(t)) return d; }
+  return -1;
+}
+let DOM_BUCKETS=null;
+function domBuckets(){ if(!DOM_BUCKETS){ DOM_BUCKETS={}; LAWS.forEach(l=>{ const d=classifyLaw(l); (DOM_BUCKETS[d]=DOM_BUCKETS[d]||[]).push(l); }); } return DOM_BUCKETS; }
+
+/* ===== deka index (contract Stream B — schema matra-deka/v1, README_STREAM_B.md)
+   envelope {schema,_provenance,stats,index}; index[matra_cid]={law_code,section,count,cases[≤25 newest],n_cases_listed,official_search}
+   ยอมรับ shape เปลือย (ไม่มี envelope) ด้วย เพื่อความทนต่อ version ก่อนหน้า ===== */
+let DEKA_IDX=null, DEKA_STATS=null, DEKA_PROV=null, DEKA_REFS=null, DEKA_REFS_P=null, DK_THIS='';
+// ฎีกา citation abbr -> law_code (สำหรับ chips มาตราที่คดีอ้างถึง; จาก docs/alias_law_codes.json)
+const DEKA_ALIAS={'ป.พ.พ.':'ป0003-1D-0002','ปพพ':'ป0003-1D-0002','ป.อ.':'ป0006-1D-0003','ปอ':'ป0006-1D-0003','ป.วิ.พ.':'ป0004-1D-0001','ป.วิ.แพ่ง':'ป0004-1D-0001','ป.วิ.อ.':'ป0005-1D-0001','ป.วิ.อาญา':'ป0005-1D-0001','ป.รัษฎากร':'ป0008-1D-0001','ป.ที่ดิน':'ป0002-1D-0001'};
+// lazy-load co-citation sidecar ครั้งเดียว (~4.5MB/~0.6MB gzip) — เฉพาะตอนเปิด ⚖️ modal ครั้งแรก
+function loadDekaRefs(){ if(DEKA_REFS) return Promise.resolve(DEKA_REFS);
+  if(!DEKA_REFS_P) DEKA_REFS_P=fetch('data/deka/case_refs.json').then(r=>r.ok?r.json():null).then(d=>{DEKA_REFS=(d&&d.refs)||{};return DEKA_REFS;}).catch(()=>{DEKA_REFS={};return DEKA_REFS;});
+  return DEKA_REFS_P;
+}
+/* ===== deka case text (schema matra-deka-text/v1 — ย่อ+ฉบับเต็มจาก phoneee CC-BY-4.0, build_case_text.py)
+   ย่อ = ไฟล์ต่อมาตรา (bymatra/mNNNNN.json, ~15KB gz — 1 fetch/modal) ชี้ด้วย bymatra_map.json
+   ฉบับเต็ม = shard fulltext/s{digits(case_id)%512}.json โหลดเฉพาะตอนกด "อ่านฉบับเต็ม" ===== */
+let DEKA_BMAP=null, DEKA_BMAP_P=null; const DK_SUM_CACHE={}, DK_FULL_CACHE={}; const DK_NFULL=512; // ต้องตรงกับ N_FULL_SHARDS ใน build_case_text.py (v3)
+function loadBymatraMap(){ if(DEKA_BMAP) return Promise.resolve(DEKA_BMAP);
+  if(!DEKA_BMAP_P) DEKA_BMAP_P=fetch('data/deka/bymatra_map.json').then(r=>r.ok?r.json():null).then(d=>{DEKA_BMAP=(d&&d.map)||{};return DEKA_BMAP;}).catch(()=>{DEKA_BMAP={};return DEKA_BMAP;});
+  return DEKA_BMAP_P;
+}
+function loadDekaSums(cid){ const f=DEKA_BMAP&&DEKA_BMAP[cid]; if(!f) return Promise.resolve(null);
+  if(!DK_SUM_CACHE[f]) DK_SUM_CACHE[f]=fetch('data/deka/bymatra/'+f+'.json').then(r=>r.ok?r.json():null).catch(()=>null);
+  return DK_SUM_CACHE[f];
+}
+const dkDigits=c=>{const d=String(c).replace(/\D/g,''); return d?parseInt(d,10):0;};
+function loadDekaFull(caseId){ const s=dkDigits(caseId)%DK_NFULL;
+  if(!DK_FULL_CACHE[s]) DK_FULL_CACHE[s]=fetch('data/deka/fulltext/s'+s+'.json').then(r=>r.ok?r.json():null).then(d=>(d&&d.cases)||{}).catch(()=>({}));
+  return DK_FULL_CACHE[s];
+}
+
+/* ===== boot ===== */
+async function boot(){
+  applyTheme(); applyNumBtns();
+  let dekaRaw=null;
+  [LAWS, REPORT, dekaRaw] = await Promise.all([
+    fetch('data/laws.json').then(r=>r.json()),
+    fetch('data/build_report.json').then(r=>r.ok?r.json():null).catch(()=>null),
+    fetch('data/deka/index.json').then(r=>r.ok?r.json():null).catch(()=>null) // graceful: ไม่มี=ไม่พัง
+  ]);
+  if(dekaRaw){ DEKA_IDX=dekaRaw.index||dekaRaw; DEKA_STATS=dekaRaw.stats||null; DEKA_PROV=dekaRaw._provenance||null; }
+  $('lawPick').placeholder = `ค้นหากฎหมาย · เลขมาตรา…`;
+  renderHome();
+  showHome();
+}
+/* ===== Feature: search-first navigation (Légifrance-style) ===== */
+const FEATURED=['ป0003-1D-0002','ป0006-1D-0003','ป0004-1D-0001','ป0005-1D-0001','ป0002-1D-0001','ป0008-1D-0001'];
+const TYPE_ORDER=['ประมวลกฎหมาย','พระราชบัญญัติ','พระราชกำหนด','พระราชกฤษฎีกา','กฎกระทรวง','ระเบียบ','ประกาศ','ข้อบังคับ','หลักเกณฑ์','อื่นๆ'];
+const TYPE_BADGE={'ประมวลกฎหมาย':'ประมวล','พระราชบัญญัติ':'พ.ร.บ.','พระราชกำหนด':'พ.ร.ก.','พระราชกฤษฎีกา':'พ.ร.ฎ.','กฎกระทรวง':'กฎกระทรวง','ระเบียบ':'ระเบียบ','ประกาศ':'ประกาศ','ข้อบังคับ':'ข้อบังคับ','หลักเกณฑ์':'หลักเกณฑ์','อื่นๆ':'อื่นๆ'};
+const lawType=t=>{ t=(t||'').trim(); for(const p of TYPE_ORDER){ if(p!=='อื่นๆ' && t.startsWith(p)) return p; } if(t.startsWith('ประมวล')) return 'ประมวลกฎหมาย'; return 'อื่นๆ'; };
+const PMENU={lawPick:'pickMenu', homeSearch:'homeMenu'};
+const pmOf=inp=>$(PMENU[inp.id]);
+function pickRender(inp){
+  const menu=pmOf(inp), q=inp.value.trim().toLowerCase(), qa=th2ar(q); let flat=[], html='';
+  if(!q){
+    html=`<div class="pm-count">ประมวลกฎหมายหลัก · พิมพ์เพื่อค้นทั้ง ${fmt(String(LAWS.length))} ฉบับ</div>`;
+    FEATURED.forEach(code=>{ const l=LAWS.find(x=>x.law_code===code); if(!l) return;
+      html+=`<div class="pm-item" onmousedown="pickChoose('${inp.id}',${flat.length})"><span class="pm-badge">ประมวล</span><span class="pm-title">${esc(disp(l.title))}</span></div>`; flat.push(l); });
+  } else {
+    const res=LAWS.filter(l=>{const t=l.title.toLowerCase(); return t.includes(q)||th2ar(t).includes(qa);});
+    html=`<div class="pm-count">แสดง ${fmt(String(res.length))} จาก ${fmt(String(LAWS.length))} ฉบับ</div>`;
+    if(!res.length) html+=`<div class="pm-empty">ไม่พบกฎหมายที่ตรงกับคำค้น</div>`;
+    else{ const groups={}; res.forEach(l=>{const g=lawType(l.title);(groups[g]=groups[g]||[]).push(l);});
+      for(const g of TYPE_ORDER){ if(!groups[g]) continue; html+=`<div class="pm-group">${g} · ${fmt(String(groups[g].length))}</div>`;
+        for(const l of groups[g]){ html+=`<div class="pm-item" onmousedown="pickChoose('${inp.id}',${flat.length})"><span class="pm-badge">${TYPE_BADGE[g]}</span><span class="pm-title">${esc(disp(l.title))}</span></div>`; flat.push(l); } } }
+  }
+  menu.innerHTML=html; menu._res=flat; menu._sel=-1;
+}
+function openPick(inp){ pickRender(inp); pmOf(inp).classList.add('open'); }
+function onPickInput(inp){ pickRender(inp); pmOf(inp).classList.add('open'); }
+function pickChoose(inpId,i){ const menu=pmOf($(inpId)); const l=(menu._res||[])[i]; if(l){ menu.classList.remove('open'); $(inpId).blur(); showReader(l); } }
+function openCode(code){ const l=LAWS.find(x=>x.law_code===code); if(l) showReader(l); }
+function pickKey(e,inp){ const menu=pmOf(inp), items=menu.querySelectorAll('.pm-item');
+  if(e.key==='ArrowDown'){ e.preventDefault(); menu._sel=Math.min((menu._sel<0?-1:menu._sel)+1,items.length-1); pmSel(menu,items); }
+  else if(e.key==='ArrowUp'){ e.preventDefault(); menu._sel=Math.max((menu._sel<0?0:menu._sel)-1,0); pmSel(menu,items); }
+  else if(e.key==='Enter'){ e.preventDefault(); pickChoose(inp.id, menu._sel>=0?menu._sel:0); }
+  else if(e.key==='Escape'){ menu.classList.remove('open'); inp.blur(); } }
+function pmSel(menu,items){ items.forEach((el,i)=>el.classList.toggle('sel',i===menu._sel)); if(items[menu._sel]) items[menu._sel].scrollIntoView({block:'nearest'}); }
+document.addEventListener('click', e=>{ document.querySelectorAll('.pickmenu.open').forEach(m=>{ if(m.parentElement && !m.parentElement.contains(e.target)) m.classList.remove('open'); }); });
+
+/* ===== home ⇄ domain ⇄ reader view ===== */
+function showHome(){ $('home').classList.remove('hidden'); $('domhome').classList.add('hidden'); $('shell').classList.add('hidden'); $('mtabs').classList.add('hidden'); $('lawpickWrap').classList.add('hidden'); $('homeBtn').classList.add('hidden'); window.scrollTo(0,0); }
+function showReader(law){ $('home').classList.add('hidden'); $('domhome').classList.add('hidden'); $('shell').classList.remove('hidden'); $('mtabs').classList.remove('hidden'); $('lawpickWrap').classList.remove('hidden'); $('homeBtn').classList.remove('hidden'); window.scrollTo(0,0); loadLaw(law); }
+function goHome(){ renderHome(); showHome(); } // วาดใหม่เสมอ — กันเลขค้างโหมดเดิมหลังสลับ ไทย↔อารบิก ในหน้าอื่น
+let CUR_DOM=null;
+function showDomain(d){
+  CUR_DOM=d;
+  $('home').classList.add('hidden'); $('shell').classList.add('hidden'); $('mtabs').classList.add('hidden');
+  $('domhome').classList.remove('hidden'); $('lawpickWrap').classList.remove('hidden'); $('homeBtn').classList.remove('hidden');
+  const ls=domBuckets()[d]||[];
+  $('domTitle').textContent = d<0?DOM_UN:DOMAINS[d];
+  $('domCount').textContent = fmt(String(ls.length))+' ฉบับ';
+  const groups={}; ls.forEach(l=>{const g=lawType(l.title);(groups[g]=groups[g]||[]).push(l);});
+  let html='';
+  for(const g of TYPE_ORDER){ if(!groups[g]) continue;
+    html+=`<div class="dl-group">${g} · ${fmt(String(groups[g].length))}</div>`;
+    for(const l of groups[g]){
+      const rp=/\(ยกเลิก\)/.test(l.title)?'<span class="rp">ยกเลิกแล้ว</span>':'';
+      html+=`<button class="dl-item" onclick="openLawId('${l.id}')"><span style="flex:1">${esc(disp(l.title))}</span>${rp}<span class="m">${fmt(String(l.n_matra_main))} มาตรา</span></button>`;
+    } }
+  if(d<0) html=`<div class="cov-note" style="border:none;padding:4px 2px 12px">กฎหมายกลุ่มนี้ยังจัดหมวดอัตโนมัติไม่ได้ (ส่วนใหญ่ชื่อไม่ระบุเนื้อเรื่อง เช่น ประกาศคณะปฏิวัติรายฉบับ) — แสดงตรงๆ ไม่ยัดหมวดมั่ว</div>`+html;
+  $('domList').innerHTML = html || '<div class="pm-empty">ไม่มีกฎหมายในหมวดนี้</div>';
+  window.scrollTo(0,0);
+}
+function openLawId(id){ const l=LAWS.find(x=>x.id===id); if(l) showReader(l); }
+const PPP_CODE='ป0003-1D-0002', PPP_EXPECTED=1755; // ป.พ.พ. — canonical เดียวที่ใช้ (kickoff-sanctioned); ประมวลอื่นรอ denominator ที่ยืนยันได้
+function renderHome(){
+  $('codeCards').innerHTML = FEATURED.map(code=>{ const l=LAWS.find(x=>x.law_code===code); if(!l) return '';
+    let compl='';
+    if(code===PPP_CODE && l.n_matra_main<PPP_EXPECTED){ const pct=Math.round(100*l.n_matra_main/PPP_EXPECTED);
+      compl=`<div class="compl" style="margin-top:7px"><div class="bar" style="max-width:none" title="ข้อมูลขณะนี้ ${l.n_matra_main} จาก ~${PPP_EXPECTED} มาตรา"><div class="fill" style="width:${pct}%"></div></div>ข้อมูลขณะนี้ ${fmt(String(l.n_matra_main))} จาก ~${fmt(String(PPP_EXPECTED))} มาตรา (${fmt(String(pct))}%)</div>`; }
+    return `<button class="code-card" onclick="openCode('${code}')"><span class="cc-badge">ประมวลกฎหมาย</span><div class="cc-title">${esc(disp(l.title))}</div><div class="cc-meta">${fmt(String(l.n_matra_main))} มาตรา · ${fmt(String(l.n_expr))} ฉบับ</div>${compl}</button>`; }).join('');
+  const bk=domBuckets();
+  $('domGrid').innerHTML = DOMAINS.map((name,i)=>{ const n=(bk[i]||[]).length;
+    return `<button class="dom-card" onclick="showDomain(${i})" aria-label="${name} ${n} ฉบับ"><div class="dc-n">${name}</div><div class="dc-c">${fmt(String(n))} ฉบับ</div></button>`; }).join('')
+    + ((bk[-1]||[]).length?`<button class="dom-card dc-un" onclick="showDomain(-1)"><div class="dc-n">${DOM_UN}</div><div class="dc-c">${fmt(String(bk[-1].length))} ฉบับ — โปร่งใส ไม่ยัดหมวด</div></button>`:'');
+  if(REPORT){
+    const notif=(REPORT.skips||[]).filter(s=>s.reason.startsWith('0 matra')).length;
+    const empty=(REPORT.skips||[]).filter(s=>s.reason.includes('empty')).length;
+    $('coverage').innerHTML=`<h3>📊 ภาพรวมความครบถ้วน — โปร่งใส ทุกช่องที่ยังแหว่งมีเหตุผลกำกับ</h3>
+      <div class="cov-grid">
+        <div class="cov-cell"><div class="n">${fmt(nfm(REPORT.built))}</div><div class="l">กฎหมายที่เปิดอ่านได้</div></div>
+        <div class="cov-cell"><div class="n">${fmt(nfm(REPORT.total_flat_rows))}</div><div class="l">มาตรารวม</div></div>
+        <div class="cov-cell"><div class="n">${fmt(nfm(REPORT.groups_found))}</div><div class="l">กลุ่มกฎหมายทั้งหมด</div></div>
+        <div class="cov-cell"><div class="n">${fmt(nfm(REPORT.recovered_by_fallback||0))}</div><div class="l">ประมวลที่กู้จากฉบับก่อนหน้า</div></div>
+      </div>
+      <div class="cov-note">ยังไม่แสดง ${fmt(String(notif))} ฉบับ = ประกาศ/กฎกระทรวงที่<b>ไม่มีเลขมาตรา</b>ที่ต้นทาง (เนื้อหาเก็บครบ รอ v0.3) · ${fmt(String(empty))} ฉบับ = record ว่างทุกเวอร์ชันที่ต้นทาง · ทุกฉบับมีชื่อ+เหตุผลใน <a href="data/build_report.json" target="_blank" rel="noopener">build_report.json</a> — ไม่มีการทิ้งเงียบ<br>${DEKA_IDX?`⚖️ การเชื่อมคำพิพากษาศาลฎีกา: ${fmt(nfm((DEKA_STATS&&DEKA_STATS.n_matra_cid)||Object.keys(DEKA_IDX).length))} มาตรา · ${fmt(nfm((DEKA_STATS&&DEKA_STATS.n_cases_distinct)||0))} คดี (ชุดข้อมูล phoneee — ยังไม่ครบระบบทางการ กำลังทยอยเชื่อม)`:'⚖️ การเชื่อมคำพิพากษาศาลฎีการายมาตรา: กำลังดำเนินการ — ปุ่มฎีกาจะปรากฏเมื่อข้อมูลพร้อม'}</div>`;
+  }
+}
+async function loadLaw(law){
+  CUR=law;
+  $('lawPick').value=law.title;
+  $('readerBody').innerHTML='<div class="loading">⏳ กำลังโหลดตัวบท…</div>';
+  const [flatT, weR] = await Promise.all([
+    fetch(law.flat).then(r=>r.text()),
+    fetch(law.we).then(r=>r.json())
+  ]);
+  ROWS = flatT.split('\n').filter(l=>l.trim()).map(l=>JSON.parse(l));
+  WE = weR;
+  // เอกสารหลัก = doc_id ที่มีมาตรามากที่สุด (ภายใน doc_type ที่กำหนด ถ้าระบุ)
+  const pool = law.main_doc_type ? ROWS.filter(r=>r.doc_type===law.main_doc_type) : ROWS;
+  const byDoc = {};
+  (pool.length?pool:ROWS).forEach(r=>{ byDoc[r.doc_id]=(byDoc[r.doc_id]||0)+1; });
+  const mainDoc = Object.entries(byDoc).sort((a,b)=>b[1]-a[1])[0][0];
+  CODE = ROWS.filter(r=>r.doc_id===mainDoc);
+  renderAll();
+  if(PENDING_JUMP){ const m=PENDING_JUMP; PENDING_JUMP=null; setTimeout(()=>{ // setTimeout ไม่ใช่ rAF — rAF ค้างใน background tab
+    if(!jumpMatra(m)){ const rg=matraRange(CODE);
+      $('readerBody').insertAdjacentHTML('afterbegin',
+        `<div class="count-note" style="border:1px dashed var(--warn);border-radius:8px;padding:8px 12px;color:var(--warn)">มาตรา ${fmt(m)} ยังไม่อยู่ในชุดข้อมูลของกฎหมายฉบับนี้${rg?` (ช่วงที่มี: ${fmt(String(rg[0]))}–${fmt(String(rg[1]))})`:''} — ตรวจฉบับเต็มได้ที่เอกสารต้นทางราชการด้านบน</div>`); } },30); }
+}
+function switchLaw(id){ const l=LAWS.find(x=>x.id===id); if(l) loadLaw(l); }
+function matraRange(rows){ // ช่วงเลขมาตราจริงจาก data ที่โหลด — ไม่มีวัน stale
+  let mn=Infinity,mx=-1; for(const r of rows){ const b=parseInt(r.matra_no_arabic); if(!isNaN(b)){ if(b<mn)mn=b; if(b>mx)mx=b; } }
+  return mx<0?null:[mn,mx];
+}
+function renderAll(){
+  renderVersions(); renderTOC(); renderReader(currentRows());
+  $('docTitle').textContent = disp(CUR.title || CODE[0].law_title_th);
+  $('docMeta').innerHTML = `ฉบับรวมการแก้ไขล่าสุด <b>✓</b> · ${fmt(String(CODE.length))} มาตรา · <a href="${CODE[0].reference_url}" target="_blank" rel="noopener">เอกสารต้นทางกฤษฎีกา ↗</a>`;
+  // ความครบถ้วน: ช่วงจริงเสมอ + แถบ % เฉพาะที่มี denominator ยืนยันได้ (ป.พ.พ.)
+  const rg=matraRange(CODE);
+  if(rg && CUR.law_code===PPP_CODE && CODE.length<PPP_EXPECTED){
+    const pct=Math.round(100*CODE.length/PPP_EXPECTED);
+    $('docMeta').insertAdjacentHTML('beforeend',
+      `<div class="compl"><div class="bar"><div class="fill" style="width:${pct}%"></div></div>`+
+      `ชุดข้อมูลต้นทางขณะนี้มีช่วงมาตรา ${fmt(String(rg[0]))}–${fmt(String(rg[1]))} รวม ${fmt(String(CODE.length))} จาก ~${fmt(String(PPP_EXPECTED))} มาตราของประมวลเต็ม (${fmt(String(pct))}%)<br>`+
+      `<span style="color:var(--tx3)">หมายเหตุบรรณาธิการ: ส่วนที่เหลือจะเพิ่มเมื่อเอกสารต้นทางราชการครบชุด — ไม่มีการทิ้งเงียบ</span></div>`);
+  } else if(rg && (rg[1]-rg[0]+1)>CODE.length*1.15){
+    $('docMeta').insertAdjacentHTML('beforeend',
+      `<div class="compl">ช่วงเลขมาตราในชุดข้อมูล: ${fmt(String(rg[0]))}–${fmt(String(rg[1]))} (มี ${fmt(String(CODE.length))} มาตรา — เลขที่ขาดคือมาตราที่ถูกยกเลิกหรือยังไม่มีในเอกสารต้นทาง)</div>`);
+  }
+  // honest partial-data banner: a code-family group (1D) whose main document
+  // is not the code itself = corpus currently holds amendments only
+  const isCodeFamily = (CUR.law_code||'').includes('-1D-');
+  if(isCodeFamily && CODE[0].doc_type==='amendment_act'){
+    $('docMeta').insertAdjacentHTML('beforeend',
+      `<div style="margin-top:8px;font-size:.78rem;color:var(--warn);border:1px dashed var(--warn);border-radius:8px;padding:6px 12px;display:inline-block">ชุดข้อมูลขณะนี้มีเฉพาะฉบับแก้ไขของกลุ่มนี้ — ตัวประมวลฉบับเต็มจะเพิ่มเมื่อประมวลผลคลังข้อมูลครบชุด</div>`);
+  }
+}
+function currentRows(){ const q=$('q').value.trim(); if(!q) return CODE;
+  const qa=th2ar(q); return CODE.filter(r=> r.matra_no_arabic===qa || r.matra_no.includes(q) || r.text.includes(q)); }
+
+/* ===== versions ===== */
+function renderVersions(){
+  const ex=[...WE.expressions].sort((a,b)=>b.timeline_seq-a.timeline_seq);
+  $('verCount').textContent = fmt(String(ex.length))+' ฉบับ';
+  $('verList').innerHTML = ex.map(e=>{
+    if(e.is_latest_computed) return `<div class="ver latest"><div class="dot"></div><div><div class="code">${e.timeline_code}</div><span class="tag">ฉบับล่าสุด — ฉบับที่แสดงอยู่</span></div></div>`;
+    return `<div class="ver"><div class="dot"></div><div><div class="code">${e.timeline_code}</div><div style="font-size:.68rem">ฉบับก่อนหน้า</div></div></div>`;
+  }).join('')
+  + `<div class="ver-note">ลำดับฉบับจัดเรียงจากเลขลำดับการประกาศรวมฉบับ ฉบับล่าสุดระบุจากการเรียงลำดับทั้งชุด</div>`;
+}
+
+/* ===== TOC ===== */
+function tocEntries(rows){
+  // anchor = ตัวหัว section เอง (sec_N) — ลำดับ counter ตรงกับ renderReader
+  // เพราะทั้งคู่เดินแถวเดียวกันด้วยเงื่อนไข heading-change ชุดเดียวกัน
+  const out=[]; let last={phak:null,laksana:null,muad:null,suan:null}, si=0;
+  for(const r of rows){ for(const lv of ['phak','laksana','muad','suan']){
+    if(r[lv] && r[lv]!==last[lv]){ out.push({lv,h:r[lv],anchor:'sec_'+(si++)}); last[lv]=r[lv];
+      for(const dn of {phak:['laksana','muad','suan'],laksana:['muad','suan'],muad:['suan'],suan:[]}[lv]) last[dn]=null; } } }
+  return out;
+}
+function renderTOC(){
+  const es=tocEntries(CODE);
+  const c={phak:0,laksana:0,muad:0,suan:0}; es.forEach(e=>c[e.lv]++);
+  $('tocCount').textContent = fmt(`${c.phak} ภาค · ${c.laksana} ลักษณะ · ${c.muad} หมวด`);
+  $('tocList').innerHTML = es.map(e=>{
+    let mark='';
+    if(AMENDED[e.h]){ const y=AMENDED[e.h].match(/พ\.ศ\. [๐-๙]+/); mark=`<span class="amend-mark" title="${AMENDED[e.h]}">${fmt(y?y[0]:'แก้ไขเพิ่ม')}</span>`; }
+    if(e.h===DEFECT_H) mark=`<span class="amend-mark" title="${DEFECT_NOTE}">หมายเหตุ</span>`;
+    return `<div class="toc-item toc-${e.lv}" onclick="jump('${e.anchor}','${e.h.replace(/'/g,"\\'")}')"><span>${disp(e.h)}</span>${mark}</div>`;
+  }).join('')
+  || `<div style="padding:14px 12px;font-size:.78rem;color:var(--tx3);line-height:1.7">เอกสารนี้ไม่มีหมวดหมู่ย่อย — มาตราเรียงต่อเนื่องในหน้าอ่านด้านขวา</div>`;
+}
+
+/* ===== reader ===== */
+function stripHead(t,no){ const p='มาตรา '+no; return t.startsWith(p)? t.slice(p.length).trimStart(): t; }
+function refsChips(r){
+  if(!r.refs_out || !r.refs_out.length) return '';
+  const seen=new Set(), refs=[];
+  for(const f of r.refs_out){ const k=(f.target_doc||'')+':'+f.target_matra; if(seen.has(k))continue; seen.add(k); refs.push(f); }
+  const CAP=10;
+  const chip=f=>{
+    const foreign = f.target_doc && !((CUR.title||'').includes(f.target_doc)) && !/นี้$/.test(f.target_doc);
+    if(foreign){
+      const tgt=resolveDoc(f.target_doc);
+      if(tgt && tgt.law_code!==CUR.law_code)
+        return `<button class="ref-chip" onclick="openRefId('${tgt.id}','${jsq2(f.target_matra)}')" title="เปิด ${esc(tgt.title)} มาตรา ${esc(f.target_matra)}">${esc(f.target_doc)} ม.${fmt(f.target_matra)} ↗</button>`;
+      return `<span class="ref-chip" style="cursor:default;opacity:.65" title="กฎหมายฉบับนี้ยังไม่อยู่ในคลังข้อมูล — เปิดข้ามยังไม่ได้">${esc(f.target_doc)} ม.${fmt(f.target_matra)}</span>`;
+    }
+    return `<button class="ref-chip" onclick="jumpMatra('${jsq2(f.target_matra)}')" title="ไปมาตรา ${esc(f.target_matra)}">ม.${fmt(f.target_matra)}</button>`;
+  };
+  const head=refs.slice(0,CAP).map(chip).join('');
+  const rest=refs.length>CAP?`<span class="ref-more" hidden>${refs.slice(CAP).map(chip).join('')}</span><button class="ref-more" onclick="this.previousElementSibling.hidden=false;this.remove()">+${fmt(String(refs.length-CAP))} มาตรา</button>`:'';
+  return `<div class="refs"><span class="rlabel">อ้างถึง:</span>${head}${rest}</div>`;
+}
+function dekaBtn(r){
+  if(!DEKA_IDX) return '';
+  const e=DEKA_IDX[r.matra_cid]; if(!e || !e.count) return '';
+  return `<div><button class="deka-btn" onclick="openDeka('${jsq2(r.matra_cid)}')" aria-haspopup="dialog">⚖️ ฎีกาที่อ้างมาตรานี้ (${fmt(String(e.count))})</button></div>`;
+}
+const jsq2=s=>String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+function matraCard(r,hl){
+  const waks = stripHead(r.text, r.matra_no).split('\n').filter(w=>w.trim());
+  const body = waks.map((w,i)=> i===0
+    ? `<p class="wak"><b class="mno">มาตรา ${fmt(r.matra_no)}</b>&ensp;${esc(disp(w))}</p>`
+    : `<p class="wak">${esc(disp(w))}</p>`).join('');
+  return `<article class="matra${hl?' hl':''}" id="m_${r.matra_no_arabic}">${body}${refsChips(r)}${dekaBtn(r)}</article>`;
+}
+/* cross-มาตรา navigation — คืนค่า false เมื่อมาตราปลายทางไม่อยู่ในข้อมูล (คนเรียกไปแจ้งซื่อสัตย์) */
+function jumpMatra(m){
+  const base=String(m).split('/')[0];
+  let el=$('m_'+m)||$('m_'+base);
+  if(!el){ $('q').value=''; renderReader(CODE); el=$('m_'+m)||$('m_'+base); }
+  if(!el) return false;
+  el.scrollIntoView({block:'start'}); el.classList.add('hl'); setTimeout(()=>el.classList.remove('hl'),2400);
+  return true;
+}
+const DOC_RESOLVE=new Map(); // memoize ชื่อเอกสาร→law (render 300+ chips ไม่ scan ซ้ำ)
+function resolveDoc(name){
+  if(!name||/นี้$/.test(name)) return null; // "พระราชบัญญัตินี้" = self-ref artifact จาก extract_refs
+  if(DOC_RESOLVE.has(name)) return DOC_RESOLVE.get(name);
+  const l=LAWS.find(x=>x.title===name)||LAWS.find(x=>x.title.startsWith(name))||null;
+  DOC_RESOLVE.set(name,l); return l;
+}
+function openRefId(id,m){ const l=LAWS.find(x=>x.id===id); if(!l) return; PENDING_JUMP=m; showReader(l); }
+function secBlock(lv,h,id){
+  let out=`<div class="sec ${lv==='laksana'?'l2':lv==='muad'||lv==='suan'?'l3':''}"${id?` id="${id}"`:''}><div class="t1">${disp(h)}</div><div class="rule"></div></div>`;
+  if(AMENDED[h]) out+=`<div class="fnote">${fmt(AMENDED[h])}</div>`;
+  if(h===DEFECT_H) out+=`<div class="fnote">${fmt(DEFECT_NOTE)}</div>`;
+  return out;
+}
+function renderReader(rows, hlSet){
+  hlSet=hlSet||new Set();
+  let html='', last={phak:null,laksana:null,muad:null,suan:null}, si=0;
+  for(const r of rows){
+    if(r.phak&&r.phak!==last.phak){ html+=secBlock('phak',r.phak,'sec_'+(si++)); last.phak=r.phak; last.laksana=last.muad=last.suan=null; }
+    if(r.laksana&&r.laksana!==last.laksana){ html+=secBlock('laksana',r.laksana,'sec_'+(si++)); last.laksana=r.laksana; last.muad=last.suan=null; }
+    if(r.muad&&r.muad!==last.muad){ html+=secBlock('muad',r.muad,'sec_'+(si++)); last.muad=r.muad; last.suan=null; }
+    if(r.suan&&r.suan!==last.suan){ html+=secBlock('suan',r.suan,'sec_'+(si++)); last.suan=r.suan; }
+    html+=matraCard(r, hlSet.has(r.matra_no_arabic));
+  }
+  $('readerBody').innerHTML = html || '<div class="loading">ไม่พบมาตราที่ตรงกับคำค้น</div>';
+}
+
+/* ===== search ===== */
+let qt=null;
+function onSearch(){ clearTimeout(qt); qt=setTimeout(()=>{
+  const q=$('q').value.trim();
+  if(!q){ renderReader(CODE); return; }
+  const hits=currentRows();
+  renderReader(hits, new Set(hits.map(h=>h.matra_no_arabic)));
+  $('readerBody').insertAdjacentHTML('afterbegin', `<div class="count-note">พบ ${fmt(String(hits.length))} มาตรา จากคำค้น "${esc(q)}"</div>`);
+},220); }
+
+/* ===== toggles (display-only; re-render from same data) ===== */
+function setNum(n){ NUM=n; localStorage.setItem('matra_num',n); applyNumBtns();
+  if(!$('home').classList.contains('hidden')) renderHome();                        // home สลับเลขสด
+  else if(!$('domhome').classList.contains('hidden') && CUR_DOM!==null) showDomain(CUR_DOM); // หน้าหมวดสลับเลขสด
+  else if(CODE.length){ renderAll(); const q=$('q').value.trim(); if(q) onSearch(); } }
+function applyNumBtns(){ $('numTh').classList.toggle('on',NUM==='th'); $('numAr').classList.toggle('on',NUM==='ar'); }
+function setTheme(t){ THEME=t; localStorage.setItem('matra_theme2',t); applyTheme(); }
+function applyTheme(){ document.documentElement.dataset.theme=THEME; $('thL').classList.toggle('on',THEME==='light'); $('thD').classList.toggle('on',THEME==='dark'); }
+
+/* ===== nav ===== */
+function jump(anchor,heading){
+  $('q').value=''; renderReader(CODE); mtab('read');
+  requestAnimationFrame(()=>{ const el=$(anchor); if(el){ el.scrollIntoView({block:'start'});
+    if(el.classList.contains('matra')){ el.classList.add('hl'); setTimeout(()=>el.classList.remove('hl'),2400); } } });
+  document.querySelectorAll('.toc-item').forEach(t=>t.classList.toggle('active', t.textContent.startsWith(fmt(heading))));
+}
+function mtab(t){
+  if(!window.matchMedia('(max-width:820px)').matches) return;
+  document.querySelectorAll('.mtabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  $('verPanel').classList.toggle('show-m',t==='ver');
+  $('tocPanel').classList.toggle('show-m',t==='toc');
+  $('readPanel').style.display = t==='read'?'block':'none';
+}
+/* ===== deka modal (matra-deka/v1 — count เชื่อถือได้จาก citation-inversion, verified 6/7 vs official;
+   honesty label บังคับตาม README_STREAM_B: ชุด phoneee (นับสดจาก DEKA_STATS.n_cases_distinct = 87,525) จาก ~133,119 คดี snapshot 2026-03-10) ===== */
+let DK_LIST=[], DK_F=[], DK_SHOWN=0, DK_SEC='', DK_OFFICIAL='https://deka.supremecourt.or.th';
+const DK_CHUNK=60, thNum=s=>String(s).replace(/[๐-๙]/g,d=>'๐๑๒๓๔๕๖๗๘๙'.indexOf(d));
+async function openDeka(cid){
+  const e=DEKA_IDX && DEKA_IDX[cid]; if(!e) return;
+  const row = CODE.find(r=>r.matra_cid===cid);
+  DK_OFFICIAL = (e.official_search&&/^https:\/\/deka\.supremecourt\.or\.th/.test(e.official_search))?e.official_search:'https://deka.supremecourt.or.th';
+  $('dkTitle').textContent = `⚖️ ฎีกาที่อ้าง มาตรา ${fmt(row?row.matra_no:cid.split(':')[1])} — ${fmt(String(e.count))} คดี`;
+  $('dkBody').innerHTML='<div class="dk-note">⏳ กำลังโหลดรายละเอียดคำพิพากษา…</div>';
+  $('dkOverlay').classList.add('open');
+  await loadBymatraMap(); const payload=await loadDekaSums(cid);
+  if(!$('dkOverlay').classList.contains('open')) return; // ผู้ใช้ปิดไปก่อนโหลดเสร็จ
+  const snap = DEKA_PROV&&DEKA_PROV.snapshot_built_at?` (ข้อมูลถึง ${esc(String(DEKA_PROV.snapshot_built_at))})`:' (snapshot 2026-03-10)';
+  const ci=cid.indexOf(':'); DK_THIS=cid.slice(0,ci); DK_SEC=cid.slice(ci+1);
+  DK_LIST=(payload&&payload.list)||(e.cases||[]).map(c=>({id:c.case_id,y:String(c.case_year||(String(c.case_id).split('/')[1])||'')})); // fallback = 25 เดิม ถ้า sidecar หาย
+  const years=[...new Set(DK_LIST.map(x=>x.y||'—'))];
+  const yOpts=['<option value="">ทุกปี</option>'].concat(years.map(y=>`<option value="${esc(y)}">พ.ศ. ${fmt(y)}</option>`)).join('');
+  $('dkBody').innerHTML =
+    `<div class="dk-note" style="border:1px solid var(--warn);border-radius:9px;padding:9px 13px;color:var(--warn)">⚠️ ย่อ/ฉบับเต็มจากชุดข้อมูลเปิด <b>phoneee/thai-legal-corpus</b> ครอบคลุม ${fmt(nfm((DEKA_STATS&&DEKA_STATS.n_cases_distinct)||87525))} จากราว ${fmt(nfm(133119))} คดีในระบบทางการ${snap} — <b>ไม่ใช่จำนวนสุดท้าย</b> ค้นครบถ้วนที่ <a href="${DK_OFFICIAL}" target="_blank" rel="noopener"><b>deka.supremecourt.or.th ↗</b></a></div>` +
+    `<div class="dk-tools"><input id="dkQ" placeholder="ค้นในย่อ / เลขคดี เช่น ค้ำประกัน, 1234/2560…" oninput="dkApplyFilter()"><select id="dkY" onchange="dkApplyFilter()">${yOpts}</select><span class="dk-count" id="dkCount"></span></div>` +
+    `<div class="dk-list" id="dkListEl"></div><div id="dkMoreWrap" style="text-align:center;margin:10px 0"></div>` +
+    `<div class="dk-note"><b>"อ้างถึง"</b> = มาตราที่คำพิพากษานั้นอ้าง บอกว่าคดีเกี่ยวกับเรื่องใด — คลิกเพื่อกระโดดไปมาตรานั้น · ย่อในการ์ด = หลักกฎหมายจากตัวคำพิพากษาจริง กด <b>อ่านฉบับเต็ม</b> เพื่ออ่านทั้งฉบับในเว็บนี้ · ตรวจสอบฉบับทางการที่ <a href="${DK_OFFICIAL}" target="_blank" rel="noopener">ระบบสืบค้นคำพิพากษาศาลฎีกา ↗</a><br><b>แหล่งข้อมูล:</b> คำพิพากษาศาลฎีกา (สาธารณสมบัติ ตาม พ.ร.บ.ลิขสิทธิ์ ม.๗(๔)) เผยแพร่โดยศาลฎีกา — รวบรวมและทำความสะอาดโดยชุดข้อมูลเปิด <a href="https://huggingface.co/datasets/phoneee/thai-legal-corpus" target="_blank" rel="noopener">phoneee/thai-legal-corpus</a> (นักวิจัยอิสระบน HuggingFace, สัญญาอนุญาต CC-BY-4.0 = ใช้ต่อได้เมื่ออ้างอิงที่มา) · <b>ข้อมูลนี้เพื่อการศึกษาอ้างอิง ไม่ใช่คำแนะนำทางกฎหมาย — โปรดตรวจสอบฉบับจริงที่ระบบทางการก่อนนำไปใช้อ้างอิงคดี</b></div>`;
+  dkApplyFilter();
+}
+function dkApplyFilter(){
+  const q=thNum(($('dkQ')&&$('dkQ').value||'').trim().toLowerCase()), y=$('dkY')?$('dkY').value:'';
+  DK_F=DK_LIST.filter(x=>{
+    if(y && (x.y||'—')!==y) return false;
+    if(!q) return true;
+    return x.id.toLowerCase().includes(q) || (x.s&&x.s.toLowerCase().includes(q));
+  });
+  DK_SHOWN=0; $('dkListEl').innerHTML='';
+  $('dkCount').textContent=`ตรงเงื่อนไข ${fmt(nfm(DK_F.length))} จาก ${fmt(nfm(DK_LIST.length))} คดี`;
+  dkRenderMore();
+}
+function dkRenderMore(){
+  const end=Math.min(DK_SHOWN+DK_CHUNK, DK_F.length);
+  let html='', lastY=DK_SHOWN>0?(DK_F[DK_SHOWN-1].y||'—'):null;
+  for(let i=DK_SHOWN;i<end;i++){
+    const x=DK_F[i], yy=x.y||'—';
+    if(yy!==lastY){ html+=`<div class="dk-year">พ.ศ. ${fmt(yy)}</div>`; lastY=yy; }
+    html+=dkCard(x);
+  }
+  $('dkListEl').insertAdjacentHTML('beforeend', html);
+  DK_SHOWN=end;
+  $('dkMoreWrap').innerHTML = DK_SHOWN<DK_F.length
+    ? `<button class="dk-full-btn" onclick="dkRenderMore()">⬇︎ แสดงเพิ่ม (เหลืออีก ${fmt(nfm(DK_F.length-DK_SHOWN))} คดี)</button>` : '';
+}
+function dkCard(x){
+  const co=(x.r||[]).filter(t=>{ const j=t.indexOf('|'); const ab=j<0?'':t.slice(0,j), sc=j<0?t:t.slice(j+1); return !(DEKA_ALIAS[ab]===DK_THIS && sc===DK_SEC); });
+  const chips = co.length
+    ? `<div class="dk-refs"><span class="rlabel">อ้างถึง:</span> ${co.map(dekaChip).join('')}</div>` : '';
+  const body = x.s!=null
+    ? `<div class="dk-sum">${fmt(esc(x.s))}</div><button class="dk-full-btn" onclick="openDekaFull('${jsq2(x.id)}')" aria-haspopup="dialog">📖 อ่านฉบับเต็ม</button>`
+    : `<div class="dk-sum dim">— ตัวคำพิพากษาฉบับนี้ไม่อยู่ในชุดข้อมูลเปิด — ค้นเลขคดีที่ <a href="${DK_OFFICIAL}" target="_blank" rel="noopener">ระบบทางการ ↗</a></div>`;
+  return `<div class="dk-case"><div class="dk-no">ฎ. ${fmt(x.id)}</div>${body}${chips}</div>`;
+}
+// chip มาตราที่คดีอ้างถึง: same-code = "ม.N" กดกระโดด · cross-code = "ป.x ม.N" กดสลับกฎหมาย · ไม่รู้จัก = label เฉยๆ
+function dekaChip(t){
+  const j=t.indexOf('|');
+  if(j<0) return `<span class="ref-chip" style="cursor:default;opacity:.7">${esc(disp(t))}</span>`;
+  const ab=t.slice(0,j), sc=t.slice(j+1), code=DEKA_ALIAS[ab];
+  if(code) return `<button class="ref-chip" onclick="openMatraPeek('${jsq2(code)}','${jsq2(sc)}')" title="ดูตัวบท ${esc(ab)} มาตรา ${esc(sc)} (ซ้อนบนคดี ปิดแล้วกลับมาอ่านต่อได้)">${code===DK_THIS?'':esc(ab)+' '}ม.${fmt(sc)}</button>`;
+  return `<span class="ref-chip" style="cursor:default;opacity:.7" title="กฎหมายนี้ยังไม่อยู่ในคลัง">${esc(ab)} ม.${fmt(sc)}</span>`;
+}
+// ไปยังมาตราปลายทาง — same-code = jump ในเล่มที่โหลด · cross-code = สลับกฎหมายแล้ว jump (ผ่าน PENDING_JUMP)
+function gotoMatra(code, sec){
+  closeDeka();
+  if(CUR && CUR.law_code===code){ jumpMatra(sec); return; }
+  const l=LAWS.find(x=>x.law_code===code); if(!l) return;
+  PENDING_JUMP=sec; showReader(l);
+}
+function closeDeka(){ $('dkOverlay').classList.remove('open'); }
+/* ===== deka full-text reader (phoneee CC-BY-4.0 — โหลด shard เฉพาะตอนกด, cache ต่อ session) ===== */
+const DK_PARA=['หลักกฎหมาย:','โจทก์ฟ้อง','ผู้ร้องยื่นคำร้อง','จำเลยให้การ','ศาลชั้นต้นพิพากษา','ศาลชั้นต้นมีคำสั่ง','โจทก์อุทธรณ์','จำเลยอุทธรณ์','ผู้ร้องอุทธรณ์','ศาลอุทธรณ์พิพากษา','โจทก์ฎีกา','จำเลยฎีกา','ผู้ร้องฎีกา','ศาลฎีกาวินิจฉัย','ศาลฎีกาตรวจสำนวน','พิพากษายืน','พิพากษาแก้','พิพากษากลับ','พิพากษายก','แหล่งที่มา'];
+/* in-text law linking — การอ้างกฎหมายในตัวคำพิพากษาคลิกไปยังมาตราได้ (2026-07-03)
+   scope v1 = 6 ประมวลหลัก + ตัวย่อ (ครอบคลุมการอ้างส่วนใหญ่ในคำพิพากษา) — ไม่เดา ไม่ link ชื่อที่ไม่รู้จัก */
+const DK_LAWNAMES=[ // เรียงยาว→สั้น กันชื่อสั้นตัดหน้า
+ ['ประมวลกฎหมายวิธีพิจารณาความแพ่ง','ป0004-1D-0001'],
+ ['ประมวลกฎหมายวิธีพิจารณาความอาญา','ป0005-1D-0001'],
+ ['ประมวลกฎหมายแพ่งและพาณิชย์','ป0003-1D-0002'],
+ ['ประมวลกฎหมายที่ดิน','ป0002-1D-0001'],
+ ['ประมวลกฎหมายอาญา','ป0006-1D-0003'],
+ ['ประมวลรัษฎากร','ป0008-1D-0001'],
+ ['ป.วิ.แพ่ง','ป0004-1D-0001'],['ป.วิ.อาญา','ป0005-1D-0001'],
+ ['ป.วิ.พ.','ป0004-1D-0001'],['ป.วิ.อ.','ป0005-1D-0001'],
+ ['ป.พ.พ.','ป0003-1D-0002'],['ป.อ.','ป0006-1D-0003'],
+ ['ป.รัษฎากร','ป0008-1D-0001'],['ป.ที่ดิน','ป0002-1D-0001']];
+const DK_NUMPART='[0-9]+(?:/[0-9]+)?(?:\\s?(?:ทวิ|ตรี|จัตวา|เบญจ|ฉ(?![ก-๙])|สัตต|อัฏฐ|นว|ทศ))?';
+// จับทั้งชุด "มาตรา 91, 335, 269/5 และ 269/7" แล้วใส่ลิงก์รายตัว (ICE 2026-07-03: เลขหลัง comma ต้องลิงก์ด้วย)
+// รองรับทั้งคำเต็ม "มาตรา" และตัวย่อ "ม." (ICE 2026-07-03: "ป.พ.พ. ม. 144, ม. 147" ต้องลิงก์ด้วย)
+const DK_SEC_RE='(\\s*(?:มาตรา|ม\\.)\\s*)('+DK_NUMPART+'(?:\\s*(?:,|และ|หรือ|กับ)\\s*(?:ม\\.\\s*)?'+DK_NUMPART+')*)';
+function dkLinkify(x,store){
+  DK_LAWNAMES.forEach(([nm,code])=>{
+    const re=new RegExp(nm.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+DK_SEC_RE,'g');
+    x=x.replace(re,(m,sp,nums)=>{
+      const head=m.slice(0,m.length-nums.length); // "ชื่อกฎหมาย มาตรา "
+      const parts=nums.split(/(\s*(?:,|และ|หรือ|กับ)\s*(?:ม\.\s*)?)/); // สลับ เลข/ตัวคั่น (เลขอยู่ index คู่; "ม." ซ้ำหลัง comma นับเป็นตัวคั่น)
+      const body=parts.map((p,j)=>{
+        if(j%2===1 || !p.trim()) return fmt(p); // x ถูก esc มาแล้วทั้งก้อน
+        const sec=p.replace(/\s+/g,' ').trim();
+        return `<button class="dk-inlink" onclick="dkGoto('${jsq2(code)}','${jsq2(sec)}')" title="เปิดมาตรา ${sec} ในคลัง">${fmt(p)}</button>`;
+      }).join('');
+      const i=store.push(fmt(head)+body)-1;
+      return '\x00'+i+'\x00';
+    });
+  });
+  return x;
+}
+/* ===== มาตรา peek — กดลิงก์/chip ในคดีแล้วเปิดตัวบท "ซ้อนบนคดี" ไม่หลุดจากที่อ่านอยู่ (ICE 2026-07-03:
+   "กดเข้าและกดกลับได้" ) · Esc/ปิด = กลับมาอ่านคดีต่อทันที · ไปหน้าอ่านเต็มได้พร้อม pill "← กลับไปคดี" ===== */
+const PEEK_CACHE={}; let DKF_CASE=null, DK_RETURN=null;
+async function loadPeekRows(code){
+  if(PEEK_CACHE[code]) return PEEK_CACHE[code];
+  const l=LAWS.find(x=>x.law_code===code); if(!l) return null;
+  const flatT=await fetch(l.flat).then(r=>r.ok?r.text():null).catch(()=>null);
+  if(!flatT) return null;
+  const rows=flatT.split('\n').filter(x=>x.trim()).map(x=>JSON.parse(x));
+  const pool=l.main_doc_type?rows.filter(r=>r.doc_type===l.main_doc_type):rows;
+  const byDoc={}; (pool.length?pool:rows).forEach(r=>{byDoc[r.doc_id]=(byDoc[r.doc_id]||0)+1;});
+  const mainDoc=Object.entries(byDoc).sort((a,b)=>b[1]-a[1])[0][0];
+  return PEEK_CACHE[code]=rows.filter(r=>r.doc_id===mainDoc);
+}
+async function openMatraPeek(code,sec){
+  const l=LAWS.find(x=>x.law_code===code); if(!l){ gotoMatra(code,sec); return; }
+  $('pkTitle').textContent='§ '+disp(l.title)+' — มาตรา '+fmt(sec);
+  $('pkBody').innerHTML='<div class="dk-note">⏳ กำลังโหลดตัวบท…</div>';
+  $('pkOverlay').classList.add('open');
+  const rows=(CUR&&CUR.law_code===code&&CODE.length)?CODE:await loadPeekRows(code);
+  if(!$('pkOverlay').classList.contains('open')) return;
+  const r=rows&&(rows.find(x=>x.matra_cid===code+':'+sec)||rows.find(x=>String(x.matra_no_arabic)===String(sec)));
+  if(!r){ $('pkBody').innerHTML='<div class="dk-note">มาตรานี้ไม่อยู่ในตัวบทฉบับปัจจุบันของคลัง — เลขที่คดีอ้างอาจเป็นฉบับก่อนแก้ไข/ถูกยกเลิกแล้ว · ปิดหน้าต่างนี้เพื่อกลับไปอ่านคดีต่อ</div>'; return; }
+  const waks=stripHead(r.text,r.matra_no).split('\n').filter(w=>w.trim());
+  const body=waks.map((w,i)=> i===0
+    ? `<p class="wak"><b class="mno">มาตรา ${fmt(r.matra_no)}</b>&ensp;${esc(disp(w))}</p>`
+    : `<p class="wak">${esc(disp(w))}</p>`).join('');
+  $('pkBody').innerHTML = body +
+    `<div class="dk-note" style="border-top:1px solid var(--bd);padding-top:10px;margin-top:12px">ตัวบทฉบับปัจจุบันจากคลัง (ปิดหน้านี้ = กลับไปอ่านคดีต่อ) · <button class="dk-full-btn" onclick="peekGoFull('${jsq2(code)}','${jsq2(sec)}')">เปิดในหน้าอ่านเต็ม →</button></div>`;
+}
+function closePeek(){ $('pkOverlay').classList.remove('open'); }
+function dkGoto(code,sec){ openMatraPeek(code,sec); } // in-text link = peek ซ้อนบนคดี ไม่ปิดอะไรทั้งนั้น
+function peekGoFull(code,sec){
+  const backCase=DKF_CASE, backCid=DK_THIS?DK_THIS+':'+DK_SEC:null;
+  closePeek(); closeDekaFull();
+  gotoMatra(code,sec); // ปิด dkOverlay + สลับกฎหมาย/กระโดดให้เอง
+  if(backCase||backCid) showReturnPill(backCase,backCid);
+}
+function showReturnPill(caseId,cid){
+  DK_RETURN={caseId,cid};
+  const p=$('dkReturn');
+  p.innerHTML=`<button onclick="dkReturnGo()">← กลับไปคดี${caseId?' ฎ. '+fmt(caseId):''}</button><button class="x" onclick="dkReturnHide()" title="ปิด">✕</button>`;
+  p.style.display='flex';
+}
+async function dkReturnGo(){
+  const r=DK_RETURN; dkReturnHide(); if(!r) return;
+  if(r.cid && DEKA_IDX && DEKA_IDX[r.cid]) await openDeka(r.cid);
+  if(r.caseId) openDekaFull(r.caseId);
+}
+function dkReturnHide(){ DK_RETURN=null; $('dkReturn').style.display='none'; }
+function dkFmtFull(t){ // จัดย่อหน้า + link มาตรา (presentational เท่านั้น — ตัวอักษรไม่ถูกแก้)
+  let x=esc(t);
+  DK_PARA.forEach(k=>{ x=x.split(k).join('\n\n'+k); });
+  x=x.replace(/^\n+/,'').replace(/\n{3,}/g,'\n\n');
+  const store=[];
+  x=dkLinkify(x,store);
+  x=x.replace(/(หลักกฎหมาย:)/,'<span class="dk-hl">$1</span>');
+  x=fmt(x);
+  x=x.replace(/\x00([0-9๐-๙]+)\x00/g,(m,i)=>store[+thNum(i)]);
+  // ห่อเป็น <p> ต่อย่อหน้า → CSS จัด first-line indent แบบเว็บฎีกาทางการ (ตัวอักษรไม่ถูกแก้)
+  return '<p>'+x.trim().split(/\n{2,}/).map(p=>p.trim()).filter(Boolean).join('</p><p>')+'</p>';
+}
+async function openDekaFull(caseId){
+  DKF_CASE=caseId;
+  $('dkfTitle').textContent='📖 คำพิพากษาศาลฎีกาที่ '+fmt(caseId);
+  $('dkfBody').innerHTML='<div class="dk-note">⏳ กำลังโหลดฉบับเต็ม…</div>';
+  $('dkfOverlay').classList.add('open');
+  const cases=await loadDekaFull(caseId);
+  if(!$('dkfOverlay').classList.contains('open')) return;
+  const t=cases[caseId];
+  if(!t){
+    $('dkfBody').innerHTML='<div class="dk-note">ฉบับเต็มของคดีนี้ไม่อยู่ในชุดข้อมูลเปิด — ค้นเลขคดีที่ <a href="https://deka.supremecourt.or.th" target="_blank" rel="noopener">deka.supremecourt.or.th ↗</a></div>';
+    return;
+  }
+  $('dkfBody').innerHTML =
+    `<div class="dk-fulltext">${dkFmtFull(t)}</div>` +
+    `<div class="dk-note" style="border-top:1px solid var(--bd);padding-top:10px"><b>แหล่งข้อมูล:</b> คำพิพากษาศาลฎีกา (สาธารณสมบัติ ตาม พ.ร.บ.ลิขสิทธิ์ ม.๗(๔)) เผยแพร่โดยศาลฎีกา — ตัวบทจากชุดข้อมูลเปิด <a href="https://huggingface.co/datasets/phoneee/thai-legal-corpus" target="_blank" rel="noopener">phoneee/thai-legal-corpus</a> (CC-BY-4.0) · การแบ่งย่อหน้าจัดโดยระบบเพื่อความสะดวกในการอ่านเท่านั้น · <b>เพื่อการศึกษาอ้างอิง ไม่ใช่คำแนะนำทางกฎหมาย — โปรดตรวจสอบฉบับจริงที่ <a href="https://deka.supremecourt.or.th" target="_blank" rel="noopener">ระบบทางการ ↗</a> ก่อนใช้อ้างอิงคดี</b></div>`;
+}
+function closeDekaFull(){ $('dkfOverlay').classList.remove('open'); }
+document.addEventListener('keydown', e=>{ if(e.key!=='Escape') return;
+  if($('pkOverlay').classList.contains('open')){ closePeek(); return; }
+  if($('dkfOverlay').classList.contains('open')){ closeDekaFull(); return; }
+  if($('dkOverlay').classList.contains('open')){ closeDeka(); } });
+/* scroll-lock: overlay เปิดอยู่ = ล็อคหน้าหลัง (ICE 2026-07-03: "ข้างหลังมัน scroll ไปด้วย")
+   ใช้ MutationObserver จุดเดียว ครอบทุก path ที่ add/remove 'open' — ไม่ต้องไล่แก้ทุก call site */
+document.addEventListener('DOMContentLoaded',()=>{
+  const ovs=['dkOverlay','dkfOverlay','pkOverlay'].map(id=>$(id)).filter(Boolean);
+  const sync=()=>{ const on=ovs.some(o=>o.classList.contains('open'));
+    document.documentElement.style.overflow=on?'hidden':''; document.body.style.overflow=on?'hidden':''; };
+  const mo=new MutationObserver(sync);
+  ovs.forEach(o=>mo.observe(o,{attributes:true,attributeFilter:['class']})); sync();
+});
+document.addEventListener('DOMContentLoaded', boot);
+</script>
+</body>
+</html>

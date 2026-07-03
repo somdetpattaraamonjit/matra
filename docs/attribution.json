@@ -1,0 +1,76 @@
+{
+  "matra_licence": {
+    "code": "MIT",
+    "data": "CC-BY-4.0"
+  },
+  "matra_code_copyright": "© 2026 Somdet Pattaraamonjit",
+  "attribution_statement": "Matra data is CC-BY 4.0. The attribution chain Matra → Open Law Data Thailand → สำนักงานคณะกรรมการกฤษฎีกา must travel with any reuse. Code is MIT.",
+  "data_source_chain": [
+    "สำนักงานคณะกรรมการกฤษฎีกา (ocs-krisdika)",
+    "Open Law Data Thailand",
+    "Matra"
+  ],
+  "credits": [
+    {
+      "name": "Harvard Library Innovation Lab — OLAW & COLD French Law",
+      "role": "architecture",
+      "contribution": "Primary architectural inspiration: flat '1 row = 1 article/มาตรา' dataset shape, conservation principle, and Known-Defects transparency practice, proven on French civil law; RAG citation pattern from OLAW.",
+      "licence": "Data CC-BY; OLAW code MIT",
+      "cite": "Cargnelutti & Cushman, 2024 (COLD French Law); repos harvard-lil/cold-french-law, harvard-lil/olaw",
+      "url": "https://huggingface.co/datasets/harvard-lil/cold-french-law"
+    },
+    {
+      "name": "Légifrance / LEGI (DILA, France)",
+      "role": "architecture",
+      "contribution": "Consolidated-versions + codes model (a code as a living consolidated text with a version timeline); inspired Matra's search-first, code-first navigation and the version timeline.",
+      "licence": "Légifrance / base LEGI (DILA) open data",
+      "cite": "Base LEGI, Direction de l'information légale et administrative (DILA)",
+      "url": "https://www.legifrance.gouv.fr"
+    },
+    {
+      "name": "Akoma Ntoso (OASIS LegalDocML)",
+      "role": "architecture",
+      "contribution": "FRBR Work/Expression/Manifestation model (Work=law group, Expression=consolidated version) and hierarchical eId identifiers, grafted as an interop layer; Matra extends with akn:th:positional_insertion because AKN does not natively model Thai positional amendments (external assessment ~10% confidence without extension), keeping Thai positional structure AKN does not model.",
+      "licence": "OASIS LegalDocML standard (open specification)",
+      "cite": "OASIS LegalDocML (Akoma Ntoso); see docs/akn_adoption_verdicts.md",
+      "url": "https://docs.oasis-open.org/legaldocml/akn-core/v1.0/akn-core-v1.0-part1-vocabulary.html"
+    },
+    {
+      "name": "Open Law Data Thailand (OLDT)",
+      "role": "data",
+      "contribution": "Upstream open Thai statute corpus and the gov-backed community (Senate / สลค. / กฤษฎีกา / DGA-backed) that Matra's statute text is sourced from and published back to.",
+      "licence": "CC-BY-4.0 (chain to ocs-krisdika)",
+      "cite": "Open Law Data Thailand (Hugging Face publisher: open-law-data-thailand; website openlawdatathailand.org; GitHub DGA-Thailand)",
+      "url": "https://huggingface.co/open-law-data-thailand"
+    },
+    {
+      "name": "สำนักงานคณะกรรมการกฤษฎีกา (Office of the Council of State, ocs-krisdika)",
+      "role": "data",
+      "contribution": "Original authoritative source of the consolidated statute text (reaches Matra via OLDT); per-record reference_url points at the official searchlaw.ocs.go.th page. Source text is never mutated — upstream defects are annotated, not corrected.",
+      "licence": "CC-BY-4.0 (attribution required)",
+      "cite": "สำนักงานคณะกรรมการกฤษฎีกา / Office of the Council of State (ocs-krisdika); searchlaw.ocs.go.th",
+      "url": "https://huggingface.co/datasets/open-law-data-thailand/ocs-krisdika"
+    },
+    {
+      "name": "PyThaiNLP — thailaw dataset",
+      "role": "data",
+      "contribution": "Thai legal corpus tooling and reference point in the Thai legal-NLP ecosystem; credited as prior open work in Thai legal corpora.",
+      "licence": "CC0-1.0 (public domain per Thai Copyright Act B.E. 2537 s.7)",
+      "cite": "Phatthiyaphaibun, W. (2024). ThaiLaw: Thai Law Dataset. Zenodo. doi:10.5281/zenodo.10701494",
+      "url": "https://huggingface.co/datasets/pythainlp/thailaw-v1.0"
+    },
+    {
+      "name": "phoneee/thai-legal-corpus (Hugging Face)",
+      "role": "case-law",
+      "contribution": "Extracted and cleaned Supreme Court decisions (ฎีกา) with citation links; used by the sibling case-law lane to join case law to มาตรา via matra_cid (the ฎีกา layer).",
+      "licence": "CC-BY-4.0",
+      "cite": "phoneee/thai-legal-corpus (Hugging Face); underlying rulings from official deka.supremecourt.or.th (public domain per Thai Copyright Act B.E. 2537 s.7(4))",
+      "url": "https://huggingface.co/datasets/phoneee/thai-legal-corpus"
+    }
+  ],
+  "case_law_layer": {
+    "source": "phoneee/thai-legal-corpus",
+    "licence": "CC-BY-4.0",
+    "join_key": "matra_cid"
+  }
+}

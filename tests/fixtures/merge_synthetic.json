@@ -1,0 +1,53 @@
+{
+  "_comment": "Hand-designed synthetic multi-doc fixture for the merge=True path (Task 4'.2 review Finding 1). Field shape (sectionTypeId/sectionNo/sectionName/content) copied from the real raw-record shape used by tests/test_merge.py's _sec() helper and tests/fixtures/gate_regressions/*.json. See tests/test_merge_synthetic_fixture.py for the full hand-derived layout sketch, the row-index table, and per-rule proofs.",
+  "law_code": "SYNTH",
+  "timeline_code": "SYNTH-1B-0001-00",
+  "reference_url": null,
+  "sections": [
+    { "sectionTypeId": 1, "sectionNo": null, "sectionName": null, "content": "ประมวลกฎหมายทดสอบ" },
+
+    { "sectionTypeId": 6, "sectionNo": "1", "sectionName": "ภาค ๑", "content": "ภาค ๑ ทั่วไป" },
+    { "sectionTypeId": 7, "sectionNo": "1", "sectionName": "ลักษณะ ๑", "content": "ลักษณะ ๑ ทั่วไป" },
+    { "sectionTypeId": 4, "sectionNo": "50", "sectionName": null, "content": "มาตรา ๕๐ ข้อความทั่วไป" },
+    { "sectionTypeId": 4, "sectionNo": "51", "sectionName": null, "content": "มาตรา ๕๑ ข้อความทั่วไปสอง" },
+    { "sectionTypeId": 4, "sectionNo": "52", "sectionName": null, "content": "มาตรา ๕๒ ข้อความทั่วไปสาม" },
+
+    { "sectionTypeId": 6, "sectionNo": "2", "sectionName": "ภาค ๒", "content": "ภาค ๒ ความผิด" },
+    { "sectionTypeId": 7, "sectionNo": "1", "sectionName": "ลักษณะ ๑", "content": "ลักษณะ ๑ มั่นคง" },
+    { "sectionTypeId": 8, "sectionNo": "1", "sectionName": "หมวด ๑", "content": "หมวด ๑ กบฏ" },
+    { "sectionTypeId": 4, "sectionNo": "100", "sectionName": null, "content": "มาตรา ๑๐๐ ข้อความ กบฏ" },
+    { "sectionTypeId": 4, "sectionNo": "100", "sectionName": null, "content": "วรรคสองของมาตรา ๑๐๐ ข้อความเพิ่มเติม" },
+    { "sectionTypeId": 8, "sectionNo": "2", "sectionName": "หมวด ๒", "content": "หมวด ๒ ก่อความไม่สงบ" },
+    { "sectionTypeId": 4, "sectionNo": "101", "sectionName": null, "content": "มาตรา ๑๐๑ ข้อความ ก่อความไม่สงบ" },
+    { "sectionTypeId": 7, "sectionNo": "2", "sectionName": "ลักษณะ ๒", "content": "ลักษณะ ๒ ปกครอง" },
+    { "sectionTypeId": 4, "sectionNo": "150", "sectionName": null, "content": "มาตรา ๑๕๐ ข้อความ ปกครอง" },
+    { "sectionTypeId": 4, "sectionNo": "150", "sectionName": null, "content": "วรรคสองของมาตรา ๑๕๐ ข้อความเพิ่มเติม" },
+    { "sectionTypeId": 4, "sectionNo": "151", "sectionName": null, "content": "มาตรา ๑๕๑ ข้อความ ปกครองสอง" },
+    { "sectionTypeId": 7, "sectionNo": "1", "sectionName": "ลักษณะ ๑", "content": "ลักษณะ ๑ เดคอย-ผิดลำดับ" },
+    { "sectionTypeId": 4, "sectionNo": "160", "sectionName": null, "content": "มาตรา ๑๖๐ ข้อความเดคอย" },
+    { "sectionTypeId": 4, "sectionNo": "161", "sectionName": null, "content": "มาตรา ๑๖๑ ข้อความเดคอยสอง" },
+
+    { "sectionTypeId": 1, "sectionNo": null, "sectionName": null, "content": "พระราชบัญญัติแก้ไข (ก) ก่อการร้าย" },
+    { "sectionTypeId": 3, "sectionNo": null, "sectionName": null, "content": "โดยที่เป็นการสมควรแก้ไขเพิ่มเติมประมวลกฎหมายทดสอบ (ก)" },
+    { "sectionTypeId": 4, "sectionNo": "1", "sectionName": null, "content": "มาตรา ๑ พระราชบัญญัตินี้เรียกว่า พระราชบัญญัติแก้ไข (ก)" },
+    { "sectionTypeId": 4, "sectionNo": "2", "sectionName": null, "content": "มาตรา ๒ บังคับใช้ (ก)" },
+    { "sectionTypeId": 7, "sectionNo": "1/1", "sectionName": "ลักษณะ ๑/๑", "content": "ลักษณะ ๑/๑ ก่อการร้าย" },
+    { "sectionTypeId": 4, "sectionNo": "100/1", "sectionName": null, "content": "มาตรา ๑๐๐/๑ ข้อความก่อการร้าย ๑" },
+    { "sectionTypeId": 4, "sectionNo": "100/2", "sectionName": null, "content": "มาตรา ๑๐๐/๒ ข้อความก่อการร้าย ๒" },
+    { "sectionTypeId": 14, "sectionNo": null, "sectionName": null, "content": "ผู้รับสนองพระบรมราชโองการ (ก)" },
+
+    { "sectionTypeId": 1, "sectionNo": null, "sectionName": null, "content": "พระราชบัญญัติแก้ไข (ข) หมวด ๓" },
+    { "sectionTypeId": 3, "sectionNo": null, "sectionName": null, "content": "โดยที่เป็นการสมควรแก้ไขเพิ่มเติมประมวลกฎหมายทดสอบ (ข)" },
+    { "sectionTypeId": 4, "sectionNo": "3", "sectionName": null, "content": "มาตรา ๓ บังคับใช้ (ข)" },
+    { "sectionTypeId": 8, "sectionNo": "3", "sectionName": "หมวด ๓", "content": "หมวด ๓ ก่อวินาศกรรม" },
+    { "sectionTypeId": 4, "sectionNo": "101/1", "sectionName": null, "content": "มาตรา ๑๐๑/๑ ข้อความก่อวินาศกรรม" },
+    { "sectionTypeId": 14, "sectionNo": null, "sectionName": null, "content": "ผู้รับสนองพระบรมราชโองการ (ข)" },
+
+    { "sectionTypeId": 1, "sectionNo": null, "sectionName": null, "content": "พระราชบัญญัติแก้ไข (ค) ลักษณะ ๔" },
+    { "sectionTypeId": 3, "sectionNo": null, "sectionName": null, "content": "โดยที่เป็นการสมควรแก้ไขเพิ่มเติมประมวลกฎหมายทดสอบ (ค)" },
+    { "sectionTypeId": 4, "sectionNo": "4", "sectionName": null, "content": "มาตรา ๔ บังคับใช้ (ค)" },
+    { "sectionTypeId": 7, "sectionNo": "4", "sectionName": "ลักษณะ ๔", "content": "ลักษณะ ๔ ศพ" },
+    { "sectionTypeId": 4, "sectionNo": "200", "sectionName": null, "content": "มาตรา ๒๐๐ ข้อความศพ" },
+    { "sectionTypeId": 14, "sectionNo": null, "sectionName": null, "content": "ผู้รับสนองพระบรมราชโองการ (ค)" }
+  ]
+}

@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "matra"
+version = "0.2.0"
+description = "Matra - open Thai law data standard at the section (matra) level"
+requires-python = ">=3.10"
+dependencies = ["jsonschema>=4.21"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

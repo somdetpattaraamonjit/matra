@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.2",
+  "doc_id": "ป0006-1D-0003-63",
+  "doc_type": "code",
+  "title": {
+    "th": "ประมวลกฎหมายอาญา",
+    "en": "Criminal Code",
+    "machine_translated": true
+  },
+  "status": "in_force",
+  "status_evidence": "latest consolidated version on OCS via ocs-krisdika snapshot 2026-07-02",
+  "timeline": {
+    "law_group_code": "ป0006-1D-0003",
+    "timeline_seq": 63,
+    "is_latest_computed": true,
+    "amended_by": [],
+    "consolidates": []
+  },
+  "structure": [
+    {
+      "node_id": "n00334",
+      "node_type": "matra",
+      "order": 334,
+      "krisdika_type_id": 4,
+      "number": "๓๓๔",
+      "number_arabic": "334",
+      "heading": null,
+      "parent_id": null,
+      "hierarchy_path": "ประมวลกฎหมายอาญา > ภาค ๒ > ลักษณะ ๑๒ > หมวด ๑",
+      "display": true,
+      "status": "in_force",
+      "status_evidence": "historical consolidated version; superseded by none",
+      "effective_from": "1957-01-01",
+      "effective_until": null,
+      "matra_cid": "ป0006-1D-0003:334",
+      "application_scope": [
+        {
+          "condition": "ใช้บังคับทั่วราชอาณาจักร",
+          "area": null,
+          "from": "1957-01-01",
+          "until": null
+        }
+      ],
+      "paragraphs": [
+        {"text": "ผู้ใดเอาทรัพย์ของผู้อื่น หรือที่ผู้อื่นเป็นเจ้าของรวมอยู่ด้วยไปโดยทุจริต ผู้นั้นกระทำความผิดฐานลักทรัพย์", "indent": 0, "list_marker": null}
+      ],
+      "refs_out": [],
+      "deka_refs": []
+    }
+  ],
+  "provenance": {
+    "source": "ocs-krisdika",
+    "reference_url": "https://searchlaw.ocs.go.th/law/p0006-1D-0003-63",
+    "source_trust_rank": 1,
+    "ingested_at": "2026-07-02T12:00:00+07:00",
+    "pipeline_version": "matra-0.2.0",
+    "qa": { "auto_checks_passed": 10, "auto_checks_failed": 0, "check_report": "all conservation checks passed" },
+    "known_defects": ["repealed/pending detection deferred to v0.3"]
+  },
+  "lang": "th",
+  "en_pair_doc": null
+}

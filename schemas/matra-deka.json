@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "matra-deka/v1",
+  "title": "MATRA deka index — Supreme Court citations keyed by matra_cid",
+  "type": "object",
+  "required": [
+    "schema",
+    "_provenance",
+    "index"
+  ],
+  "properties": {
+    "schema": {
+      "const": "matra-deka/v1"
+    },
+    "_provenance": {
+      "type": "object"
+    },
+    "index": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "law_code",
+          "section",
+          "count",
+          "cases"
+        ],
+        "properties": {
+          "law_code": {
+            "type": "string"
+          },
+          "section": {
+            "type": "string",
+            "description": "number_arabic verbatim; matra_cid = law_code:section"
+          },
+          "count": {
+            "type": "integer",
+            "description": "distinct Supreme Court cases citing this มาตรา (deka_citations inversion)"
+          },
+          "cases": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "case_id"
+              ],
+              "properties": {
+                "case_id": {
+                  "type": "string"
+                },
+                "case_year": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "n_cases_listed": {
+            "type": "integer"
+          },
+          "official_search": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

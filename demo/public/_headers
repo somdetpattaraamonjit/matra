@@ -1,0 +1,9 @@
+# Cloudflare Workers Static Assets — cache policy.
+# WHY no-cache everywhere: the build assigns per-law filenames lNNNN by enumerate
+# index over sorted groups, so a given lNNNN can map to a DIFFERENT law after any
+# rebuild. Edge/browser caching of these would serve a stale file under a reused
+# name → wrong law shown. Until filenames are content-stable, every asset must
+# revalidate (cheap 304 via ETag when unchanged). Fixes the recurring
+# "redeploy masked by cached laws.json" gotcha (kickoff §3).
+/*
+  Cache-Control: no-cache

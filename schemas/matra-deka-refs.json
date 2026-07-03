@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "matra-deka-refs/v1",
+  "title": "MATRA ฎีกา co-citation sidecar",
+  "description": "case_id -> co-cited มาตรา ('the other provisions this Supreme Court ruling cites'). Lazy-loaded companion to matra-deka/v1 index.json; scoped to displayed cases only. Source: phoneee/thai-legal-corpus deka_citations (CC-BY-4.0), same graph inverted for index.json counts. Gives a searcher a 'what is this case about' fingerprint instead of a bare case number (added 2026-07-03).",
+  "type": "object",
+  "required": ["schema", "refs"],
+  "properties": {
+    "schema": {"const": "matra-deka-refs/v1"},
+    "_provenance": {"type": "object"},
+    "refs": {
+      "type": "object",
+      "description": "map: case_id -> array of co-citation tokens",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "description": "co-citation token 'ABBR|section', e.g. 'ป.อ.|335', 'ป.พ.พ.|1598/1', 'ป.วิ.อ.|192'. ABBR maps to law_code via docs/alias_law_codes.json; section is verbatim (may carry ทวิ/ตรี or slash forms). The anchor มาตรา is kept in the list and filtered by the viewer at render time (so a case can be displayed under any of its cited มาตรา)."
+        }
+      }
+    }
+  }
+}

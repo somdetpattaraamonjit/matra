@@ -1,0 +1,104 @@
+{
+ "note": "Join key for case-law (ฎีกา): matra_cid = '{law_code}:{matra_no_arabic}'. Match a citation's law name (or abbreviation) to law_code here, then join on matra_cid. law_code + มาตรา number are stable across rebuilds.",
+ "matra_cid_format": "{law_code}:{matra_no_arabic}",
+ "codes": [
+  {
+   "law_code": "ป0002-1D-0001",
+   "canonical_title": "ประมวลกฎหมายที่ดิน",
+   "aliases": [
+    "ประมวลกฎหมายที่ดิน"
+   ],
+   "matra_cid_prefix": "ป0002-1D-0001:",
+   "matra_base": 113,
+   "matra_in_corpus": 113,
+   "assembled": false
+  },
+  {
+   "law_code": "ป0003-1D-0002",
+   "canonical_title": "ประมวลกฎหมายแพ่งและพาณิชย์",
+   "aliases": [
+    "ประมวลกฎหมายแพ่งและพาณิชย์",
+    "ป.พ.พ.",
+    "ปพพ"
+   ],
+   "matra_cid_prefix": "ป0003-1D-0002:",
+   "matra_base": 1755,
+   "matra_in_corpus": 1755,
+   "assembled": true
+  },
+  {
+   "law_code": "ป0004-1D-0001",
+   "canonical_title": "ประมวลกฎหมายวิธีพิจารณาความแพ่ง",
+   "aliases": [
+    "ประมวลกฎหมายวิธีพิจารณาความแพ่ง",
+    "ป.วิ.พ.",
+    "ป.วิ.แพ่ง"
+   ],
+   "matra_cid_prefix": "ป0004-1D-0001:",
+   "matra_base": 313,
+   "matra_in_corpus": 323,
+   "assembled": false
+  },
+  {
+   "law_code": "ป0005-1D-0001",
+   "canonical_title": "ประมวลกฎหมายวิธีพิจารณาความอาญา",
+   "aliases": [
+    "ประมวลกฎหมายวิธีพิจารณาความอาญา",
+    "ป.วิ.อ.",
+    "ป.วิ.อาญา"
+   ],
+   "matra_cid_prefix": "ป0005-1D-0001:",
+   "matra_base": 266,
+   "matra_in_corpus": 267,
+   "assembled": false
+  },
+  {
+   "law_code": "ป0006-1D-0003",
+   "canonical_title": "ประมวลกฎหมายอาญา",
+   "aliases": [
+    "ประมวลกฎหมายอาญา",
+    "ป.อ.",
+    "ปอ"
+   ],
+   "matra_cid_prefix": "ป0006-1D-0003:",
+   "matra_base": 397,
+   "matra_in_corpus": 398,
+   "assembled": false
+  },
+  {
+   "law_code": "ป0007-1D-0008",
+   "canonical_title": "ประมวลกฎหมายอาญาทหาร",
+   "aliases": [
+    "ประมวลกฎหมายอาญาทหาร"
+   ],
+   "matra_cid_prefix": "ป0007-1D-0008:",
+   "matra_base": 51,
+   "matra_in_corpus": 52,
+   "assembled": false
+  },
+  {
+   "law_code": "ป0008-1D-0001",
+   "canonical_title": "ประมวลรัษฎากร",
+   "aliases": [
+    "ประมวลรัษฎากร",
+    "ป.รัษฎากร"
+   ],
+   "matra_cid_prefix": "ป0008-1D-0001:",
+   "matra_base": 178,
+   "matra_in_corpus": 262,
+   "assembled": false
+  },
+  {
+   "law_code": "ป0060-1D-0001",
+   "canonical_title": "ประมวลกฎหมายยาเสพติด",
+   "aliases": [
+    "ประมวลกฎหมายยาเสพติด",
+    "ป.ยาเสพติด"
+   ],
+   "matra_cid_prefix": "ป0060-1D-0001:",
+   "matra_base": 186,
+   "matra_in_corpus": 186,
+   "assembled": false
+  }
+ ]
+}
