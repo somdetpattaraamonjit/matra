@@ -792,20 +792,62 @@ const DK_NUMPART='[0-9]+(?:/[0-9]+)?(?:\\s?(?:ทวิ|ตรี|จัตว�
 // จับทั้งชุด "มาตรา 91, 335, 269/5 และ 269/7" แล้วใส่ลิงก์รายตัว (ICE 2026-07-03: เลขหลัง comma ต้องลิงก์ด้วย)
 // รองรับทั้งคำเต็ม "มาตรา" และตัวย่อ "ม." (ICE 2026-07-03: "ป.พ.พ. ม. 144, ม. 147" ต้องลิงก์ด้วย)
 const DK_SEC_RE='(\\s*(?:มาตรา|ม\\.)\\s*)('+DK_NUMPART+'(?:\\s*(?:,|และ|หรือ|กับ)\\s*(?:ม\\.\\s*)?'+DK_NUMPART+')*)';
+function dkNums(nums,code){ // numlist → ปุ่มลิงก์รายตัว (ใช้ร่วมทุก pass)
+  const parts=nums.split(/(\s*(?:,|และ|หรือ|กับ)\s*(?:ม\.\s*)?)/); // สลับ เลข/ตัวคั่น (เลขอยู่ index คู่; "ม." ซ้ำหลัง comma นับเป็นตัวคั่น)
+  return parts.map((p,j)=>{
+    if(j%2===1 || !p.trim()) return fmt(p); // x ถูก esc มาแล้วทั้งก้อน
+    const sec=p.replace(/\s+/g,' ').trim();
+    return `<button class="dk-inlink" onclick="dkGoto('${jsq2(code)}','${jsq2(sec)}')" title="เปิดมาตรา ${sec} ในคลัง">${fmt(p)}</button>`;
+  }).join('');
+}
+/* ===== whole-corpus alias (ICE 2026-07-03: "Matra ที่ไม่หลุดสักมาตรา") =====
+   law_alias.json: ชื่อ→{ปี→law_code} ครบ 1,619 กฎหมายในคลัง (lazy-load ครั้งแรกที่เปิดฉบับเต็ม)
+   YEAR-STRICT: ลิงก์เฉพาะเมื่อปี พ.ศ. ที่อ้างตรงกับฉบับที่เรามี — อ้างฉบับที่คลังไม่มี = ปล่อยตัวอักษรเดิม
+   (ลิงก์ผิดฉบับอันตรายกว่าไม่ลิงก์) · ไม่มีปี = ไม่เดา */
+let DK_ALIAS=null, DK_ALIAS_P=null;
+function ensureAlias(){
+  if(!DK_ALIAS_P) DK_ALIAS_P=fetch('data/deka/law_alias.json').then(r=>r.ok?r.json():null)
+    .then(d=>{DK_ALIAS=(d&&d.byname)||{};return DK_ALIAS;}).catch(()=>{DK_ALIAS={};return DK_ALIAS;});
+  return DK_ALIAS_P;
+}
+const DK_FORMS={'พ.ร.บ.ประกอบรัฐธรรมนูญ':'พระราชบัญญัติประกอบรัฐธรรมนูญ','พ.ร.บ.':'พระราชบัญญัติ','พ.ร.ก.':'พระราชกำหนด','พ.ร.ฎ.':'พระราชกฤษฎีกา'};
+const DK_PREFIX='(พระราชบัญญัติประกอบรัฐธรรมนูญ|พ\\.ร\\.บ\\.ประกอบรัฐธรรมนูญ|พระราชบัญญัติ|พ\\.ร\\.บ\\.|พระราชกำหนด|พ\\.ร\\.ก\\.|พระราชกฤษฎีกา|พ\\.ร\\.ฎ\\.|พระธรรมนูญศาลยุติธรรม|รัฐธรรมนูญแห่งราชอาณาจักรไทย)';
+const DK_NAMEPART='([ก-๙][ก-๙0-9 .()/]{0,120}?)?';       // ชื่อกฎหมาย (ว่างได้ เช่น พระธรรมนูญฯ/รธน.)
+const DK_YEARPART='\\s*(?:\\(ฉบับที่[^)]{0,25}\\)\\s*)?(?:พ\\.ศ\\.|พุทธศักราช)\\s*([0-9]{4})';
+function dkNorm(s){return (s||'').normalize('NFC').replace(/ํา/g,'ำ').replace(/\s+/g,'');}
+function dkAliasCode(prefix,name,year){
+  if(!DK_ALIAS||!year) return null;                       // year-strict
+  const form=DK_FORMS[prefix]||prefix;
+  const slot=DK_ALIAS[dkNorm(form+(name||''))];
+  return slot?(slot[year]||null):null;
+}
 function dkLinkify(x,store){
+  // pass 1 — 6 ประมวลหลัก + ตัวย่อ (ไม่ต้องมีปี)
   DK_LAWNAMES.forEach(([nm,code])=>{
     const re=new RegExp(nm.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+DK_SEC_RE,'g');
     x=x.replace(re,(m,sp,nums)=>{
       const head=m.slice(0,m.length-nums.length); // "ชื่อกฎหมาย มาตรา "
-      const parts=nums.split(/(\s*(?:,|และ|หรือ|กับ)\s*(?:ม\.\s*)?)/); // สลับ เลข/ตัวคั่น (เลขอยู่ index คู่; "ม." ซ้ำหลัง comma นับเป็นตัวคั่น)
-      const body=parts.map((p,j)=>{
-        if(j%2===1 || !p.trim()) return fmt(p); // x ถูก esc มาแล้วทั้งก้อน
-        const sec=p.replace(/\s+/g,' ').trim();
-        return `<button class="dk-inlink" onclick="dkGoto('${jsq2(code)}','${jsq2(sec)}')" title="เปิดมาตรา ${sec} ในคลัง">${fmt(p)}</button>`;
-      }).join('');
-      const i=store.push(fmt(head)+body)-1;
+      const i=store.push(fmt(head)+dkNums(nums,code))-1;
       return '\x00'+i+'\x00';
     });
+  });
+  // pass 2 — ทุกกฎหมายในคลัง: "<พ.ร.บ.ชื่อ> พ.ศ. YYYY มาตรา N, M"
+  const reA=new RegExp(DK_PREFIX+DK_NAMEPART+DK_YEARPART+DK_SEC_RE,'g');
+  x=x.replace(reA,(m,pf,name,year,sp,nums)=>{
+    const code=dkAliasCode(pf,name,year);
+    if(!code) return m;                                    // no-guess: คลังไม่มีฉบับนี้ = ปล่อยเดิม
+    const head=m.slice(0,m.length-nums.length);
+    const i=store.push(fmt(head)+dkNums(nums,code))-1;
+    return '\x00'+i+'\x00';
+  });
+  // pass 3 — รูปกลับด้าน: "มาตรา N (วรรค...) แห่ง <พ.ร.บ.ชื่อ> พ.ศ. YYYY"
+  const reB=new RegExp(DK_SEC_RE+'(\\s*(?:วรรค[ก-๙]+\\s*)?แห่ง\\s*)'+DK_PREFIX+DK_NAMEPART+DK_YEARPART,'g');
+  x=x.replace(reB,(m,sp,nums,haeng,pf,name,year)=>{
+    const code=dkAliasCode(pf,name,year);
+    if(!code) return m;
+    const tail=m.slice(sp.length+nums.length);             // " แห่ง พ.ร.บ.… พ.ศ. YYYY" คงตัวอักษรเดิม
+    const i=store.push(fmt(sp)+dkNums(nums,code)+fmt(tail))-1;
+    return '\x00'+i+'\x00';
   });
   return x;
 }
@@ -876,7 +918,7 @@ async function openDekaFull(caseId){
   $('dkfTitle').textContent='📖 คำพิพากษาศาลฎีกาที่ '+fmt(caseId);
   $('dkfBody').innerHTML='<div class="dk-note">⏳ กำลังโหลดฉบับเต็ม…</div>';
   $('dkfOverlay').classList.add('open');
-  const cases=await loadDekaFull(caseId);
+  const [cases]=await Promise.all([loadDekaFull(caseId),ensureAlias()]); // alias พร้อมก่อน linkify
   if(!$('dkfOverlay').classList.contains('open')) return;
   const t=cases[caseId];
   if(!t){
