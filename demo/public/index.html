@@ -312,6 +312,7 @@ footer{border-top:1px solid var(--bd);padding:22px 20px 34px;text-align:center;f
 <div id="dkReturn" style="display:none"></div>
 
 <footer>
+<!--FRESH-->🆕 คลังฎีกาอัปเดตล่าสุด <b>3 กรกฎาคม 2569</b> — ฎีกาใหม่หลัง snapshot 94 คดี · <a href="latest.html">ดูฎีกาล่าสุดในคลัง</a><br><!--/FRESH-->
   ตัวบทจากข้อมูลเปิดภาครัฐ (สำนักงานคณะกรรมการกฤษฎีกา ผ่าน Open Law Data Thailand) · ทุกมาตรามีลิงก์ตรวจกับเอกสารต้นทางราชการ<br>
   ข้อมูลคำพิพากษาศาลฎีกา (สาธารณสมบัติ, พ.ร.บ.ลิขสิทธิ์ พ.ศ. 2537 ม.7(4)) เผยแพร่โดยศาลฎีกา — รวบรวมและทำความสะอาดโดยชุดข้อมูลเปิด <a href="https://huggingface.co/datasets/phoneee/thai-legal-corpus" target="_blank" rel="noopener">phoneee/thai-legal-corpus</a> (HuggingFace, CC-BY-4.0)<br>
   สถานะการบังคับใช้รายมาตราจะแสดงเมื่อยืนยันหลักฐานจากราชกิจจานุเบกษาแล้วเท่านั้น · ข้อมูล CC-BY 4.0<br>
@@ -424,6 +425,17 @@ async function boot(){
   $('lawPick').placeholder = `ค้นหากฎหมาย · เลขมาตรา…`;
   renderHome();
   showHome();
+  // deep link จาก latest.html (ฎีกาล่าสุด): #m=<law_code>:<sec> — ไม่ match = no-op เงียบ
+  // re-jump หลัง layout นิ่ง: เล่มใหญ่ (~90K px) render+fonts ตอน boot เบียด scroll แรกหลุดได้
+  if(location.hash.startsWith('#m=')){
+    const q=decodeURIComponent(location.hash.slice(3)), j=q.lastIndexOf(':');
+    // strip hash ทันที — กัน native anchor-restore ของ browser (หา id ไม่เจอ → scroll top ทับ jump เรา)
+    history.replaceState(null, '', location.pathname + location.search);
+    if(j>0){ const c=q.slice(0,j), s=q.slice(j+1);
+      gotoMatra(c, s);
+      setTimeout(()=>{ if(CUR && CUR.law_code===c) jumpMatra(s); }, 1800);
+    }
+  }
 }
 /* ===== Feature: search-first navigation (Légifrance-style) ===== */
 const FEATURED=['ป0003-1D-0002','ป0006-1D-0003','ป0004-1D-0001','ป0005-1D-0001','ป0002-1D-0001','ป0008-1D-0001'];
@@ -637,7 +649,19 @@ function jumpMatra(m){
   let el=$('m_'+m)||$('m_'+base);
   if(!el){ $('q').value=''; renderReader(CODE); el=$('m_'+m)||$('m_'+base); }
   if(!el) return false;
-  el.scrollIntoView({block:'start'}); el.classList.add('hl'); setTimeout(()=>el.classList.remove('hl'),2400);
+  // ไกลเกิน ~3 จอ = กระโดดทันทีด้วย scrollTo+auto — บนเอกสารยักษ์ (~90K px) Chrome ทั้งยกเลิก smooth
+  // ระยะไกลเงียบๆ และ scrollIntoView({behavior:'auto'}) ก็คลาดได้ (พิสูจน์ live 2026-07-03: ค้าง 1986/78016)
+  const top = el.getBoundingClientRect().top;
+  if(Math.abs(top) > innerHeight*3){
+    const de=document.documentElement, prev=de.style.scrollBehavior;
+    const smt=parseFloat(getComputedStyle(el).scrollMarginTop)||0; // scrollTo ไม่เคารพ scroll-margin (ต่างจาก scrollIntoView) — หักเอง
+    de.style.scrollBehavior='auto';
+    window.scrollTo(0, scrollY + top - smt);
+    de.style.scrollBehavior=prev;
+  } else {
+    el.scrollIntoView({block:'start'});
+  }
+  el.classList.add('hl'); setTimeout(()=>el.classList.remove('hl'),2400);
   return true;
 }
 const DOC_RESOLVE=new Map(); // memoize ชื่อเอกสาร→law (render 300+ chips ไม่ scan ซ้ำ)

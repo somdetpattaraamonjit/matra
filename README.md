@@ -5,6 +5,9 @@
 Thai statutory data is publicly available — the hard part is making it *usable*. As bulk-published legal data, the upstream records concatenate whole timelines into single records, place amendment content at the end of the file rather than merged into position, and carry source artifacts (a legacy `is_latest` flag, table-of-contents inconsistencies, an occasional heading mis-number). These are normal characteristics of open legal-data publishing — not a fault of the publishers, whose openness makes this project possible — but they make the data hard to use directly. Every Thai legal-tech project pays this cleaning cost privately. Matra pays it once, in the open, with proofs, and reports issues back upstream.
 
 ## What you get
+<!--DEKA_FRESH-->
+**🆕 Deka freshness:** case-law index last topped-up from the official Supreme Court search on **2026-07-03** (+94 post-snapshot cases, human-in-loop weekly). Live list: `demo/public/latest.html` · feed: `demo/public/data/deka/latest.json`
+<!--/DEKA_FRESH-->
 
 One truth, two views, every claim checkable:
 
