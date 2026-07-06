@@ -43,7 +43,7 @@ From Akoma Ntoso we grafted the **FRBR Work/Expression/Manifestation** model
 view) and **hierarchical `eId` identifiers** (structural ids using AKN element
 names, with Latin legal-ordinal suffixes for ทวิ/ตรี/จัตวา…). We keep the
 international vocabulary as an interop layer. But Akoma Ntoso does **not** natively
-model Thai **positional** amendments (a heading that declares its own slot by number,
+model Thai **positional** amendments (a heading that declares its own position by number,
 with no directive sentence) — an external standards assessment put its confidence at
 **~10% without extension**. So Matra extends rather than pretends: the Merge Engine
 plus the `akn:th:positional_insertion` vocabulary is the missing piece. We adopted

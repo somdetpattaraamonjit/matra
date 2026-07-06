@@ -18,7 +18,7 @@ One truth, two views, every claim checkable:
 
 ## The missing organ: the Merge Engine
 
-Thai amendment acts frequently insert whole structures (a new ลักษณะ, a new หมวด) **with no directive sentence at all** — the inserted heading simply declares its own position by number (ลักษณะ ๑/๑ slots itself between ลักษณะ ๑ and ๒). In the consolidated Criminal Code record, all four amendment-inserted structures (terrorism, electronic cards, passports, offences relating to corpses) arrive this way, parked at the end of the raw file. A pipeline that only parses directive sentences reconstructs a code with entire ลักษณะ missing — and never knows.
+Thai amendment acts frequently insert whole structures (a new ลักษณะ, a new หมวด) **with no directive sentence at all** — the inserted heading simply declares its own position by number (ลักษณะ ๑/๑ inserts itself between ลักษณะ ๑ and ๒). In the consolidated Criminal Code record, all four amendment-inserted structures (terrorism, electronic cards, passports, offences relating to corpses) arrive this way, parked at the end of the raw file. A pipeline that only parses directive sentences reconstructs a code with entire ลักษณะ missing — and never knows.
 
 International standards do not model this. **Akoma Ntoso cannot natively represent Thai positional amendments (an external standards assessment put its confidence at 10% without extension) — Matra's Merge Engine plus the `akn:th:positional_insertion` extension is the missing piece.** The engine re-homes inserted structures by anchor algebra (slash-number sequences, plain increments, scope fallbacks), proves conservation (rows and characters in = out, Δ = 0), and writes an auditable merge ledger into the QA report.
 

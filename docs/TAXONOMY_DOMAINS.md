@@ -54,7 +54,7 @@ Stream A design doc. ICE approved 2026-07-03 (14 หมวด · rule engine + e
 - ป.พ.พ. (`ป0003-1D-0002`): แถบ 845/~1,755 (๔๘%) + หมายเหตุบรรณาธิการ "ชุดข้อมูลต้นทางขณะนี้มีเฉพาะช่วงมาตรา ๔๕๓–๑๒๙๗ (บรรพ ๓)" — 1755 คือ canonical เดียวที่ใช้ (kickoff-sanctioned); การกู้ให้ครบ = งาน Stream C
 - ประมวลอื่น: **ไม่แสดง %** จนกว่ามี denominator ที่ยืนยันได้ (เลขจาก LLM ภายนอกสอบตก 3/6 — บันทึกไว้กัน confabulation ซ้ำ)
 
-## 5. Deka slot — เชื่อมกับของจริง Stream B แล้ว (2026-07-03 คืนเดียวกัน)
+## 5. Deka hook — เชื่อมกับของจริง Stream B แล้ว (2026-07-03 คืนเดียวกัน)
 
 - B ส่ง `data/deka/index.json` schema `matra-deka/v1` (envelope `{schema,_provenance,stats,index}`) — **ต่างจาก kickoff contract** (top-level map, มี tiers/url) → viewer รับ **ทั้งสอง shape** (`raw.index||raw`) กัน drift รอบหน้า
 - ของจริง: **5,755 matra_cid · 87,525 คดี** (ป.อาญา ม.1 = 319 > benchmark ตลาด 261) · per-entry `{count(TRUSTED), cases[≤25 ใหม่สุดก่อน]{case_id,case_year}, official_search}` + sidecar `case_refs.json` (co-cited มาตรา ต่อคดี, lazy-load)
